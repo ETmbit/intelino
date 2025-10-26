@@ -281,7 +281,8 @@ function msgBase(id: number): number {
     for (let i = 0; i < CONTROLLER.length; i++)
         if (CONTROLLER[i]._id == id) {
             base = CONTROLLER[i]._controller * 1000 +
-                (CONTROLLER[i]._port * 200 + CONTROLLER[i]._firstled) * 15
+                   CONTROLLER[i]._port * 200 +
+                   CONTROLLER[i]._firstled * 15
             return base
         }
     return 0
