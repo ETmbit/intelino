@@ -224,23 +224,23 @@ enum Speed {
 }
 
 enum Pause {
-    //% block="long"
-    //% block.loc.nl="lang"
+    //% block="< long <"
+    //% block.loc.nl="< lang <"
     LongA = 12,
-    //% block="long"
-    //% block.loc.nl="lang"
+    //% block="> long >"
+    //% block.loc.nl="> lang >"
     LongB = 13,
-    //% block="normal"
-    //% block.loc.nl="normaal"
+    //% block="< normal <"
+    //% block.loc.nl="< normaal <"
     NormalA = 14,
-    //% block="normal"
-    //% block.loc.nl="normaal"
+    //% block="> normal >"
+    //% block.loc.nl="> normaal >"
     NormalB = 15,
-    //% block="short"
-    //% block.loc.nl="kort"
+    //% block="< short <"
+    //% block.loc.nl="< kort <"
     ShortA = 16,
-    //% block="off"
-    //% block.loc.nl="uit"
+    //% block="> short >"
+    //% block.loc.nl="> kort >"
     ShortB = 17,
     //% block="off"
     //% block.loc.nl="uit"
