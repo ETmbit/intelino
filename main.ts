@@ -257,7 +257,7 @@ let PORT2: Ledstrip.Device
 let PORT3: Ledstrip.Device
 let PORT4: Ledstrip.Device
 
-let CONTROLLERID: Controller = 0
+let CONTROLLERID: Controller = -1
 
 interface Service {
     _id: number
@@ -333,7 +333,6 @@ namespace Intelino {
     //% block="switch at IC %id is: %speed "
     //% block.loc.nl="wissel bij IC %id is: %speed"
     export function trackSwitch(id: number, direction: Switch) {
-basic.showNumber(msgBase(id) + direction)
         radio.sendNumber(msgBase(id) + direction)
     }
 }
@@ -343,7 +342,7 @@ basic.showNumber(msgBase(id) + direction)
 
 function setController(controller: Controller) {
     CONTROLLERID = controller
-    PORT1 = Ledstrip.create(DigitalPin.P20, 25)
+    PORT1 = Ledstrip.create(DigitalPin.P19, 25)
     PORT2 = Ledstrip.create(DigitalPin.P0, 25)
     PORT3 = Ledstrip.create(DigitalPin.P1, 25)
     PORT4 = Ledstrip.create(DigitalPin.P2, 25)
@@ -354,13 +353,11 @@ function setController(controller: Controller) {
 }
 
 messageHandler = (msg: number) => {
-    if (!CONTROLLERID) return
+    if (CONTROLLERID < 0) return
     let service = msgService(msg)
     let color: Color
     let leds = 1
     let maxleds = 1
-basic.showNumber(CONTROLLERID)
-basic.showNumber(service._controller)
     if (service._controller == CONTROLLERID) {
         switch (service._state) {
             case Switch.Straight: color = Color.Green; break;
@@ -382,28 +379,28 @@ basic.showNumber(service._controller)
             case Pause.Normal: leds = 2; break;
         }
         switch (service._port) {
-            case 0:
+            case Port.P1:
                     for (let i = 0; i < leds; i++)
                         PORT1.setPixelColor(service._firstled + i, color)
                     for (let i = leds; i < maxleds; i++)
                         PORT1.setPixelColor(service._firstled + i, Color.Black)
                     PORT1.show()
                     break;
-            case 1: 
+            case Port.P2:
                     for (let i = 0; i < leds; i++)
                         PORT2.setPixelColor(service._firstled + i, color)
                     for (let i = leds; i < maxleds; i++)
                         PORT2.setPixelColor(service._firstled + i, Color.Black)
                     PORT2.show()
                     break;
-            case 2:
+            case Port.P3:
                     for (let i = 0; i < leds; i++)
                         PORT3.setPixelColor(service._firstled + i, color)
                     for (let i = leds; i < maxleds; i++)
                         PORT3.setPixelColor(service._firstled + i, Color.Black)
                     PORT3.show()
                     break;
-            case 3:
+            case Port.P4:
                     for (let i = 0; i < leds; i++)
                         PORT4.setPixelColor(service._firstled + i, color)
                     for (let i = leds; i < maxleds; i++)
