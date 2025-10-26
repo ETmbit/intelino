@@ -210,13 +210,13 @@ enum Speed {
     FastA = 5,
     //% block=">>>"
     FastB = 6,
-    //% block.loc.nl="<<"
+    //% block="<<"
     NormalA = 7,
-    //% block.loc.nl=">>"
+    //% block=">>"
     NormalB = 8,
-    //% block.loc.nl="<"
+    //% block="<"
     SlowA = 9,
-    //% block.loc.nl=">"
+    //% block=">"
     SlowB = 10,
     //% block="off"
     //% block.loc.nl="uit"
