@@ -333,6 +333,7 @@ namespace Intelino {
     //% block="switch at IC %id is: %speed "
     //% block.loc.nl="wissel bij IC %id is: %speed"
     export function trackSwitch(id: number, direction: Switch) {
+basic.showNumber(msgBase(id) + direction)
         radio.sendNumber(msgBase(id) + direction)
     }
 }
@@ -353,6 +354,7 @@ function setController(controller: Controller) {
 }
 
 messageHandler = (msg: number) => {
+basic.showNumber(msg)
     if (!CONTROLLERID) return
     let service = msgService(msg)
     let color: Color
