@@ -364,7 +364,7 @@ messageHandler = (msg: number) => {
             case Switch.Straight: color = Color.Green; break;
             case Switch.Left: color = Color.Red; break;
             case Switch.Right: color = Color.Blue; break;
-            case Uncouple.On: color = Color.Yellow; break;
+            case Uncouple.On: color = fromRgb(0x84A400); break;
             case Uncouple.Off: color = Color.Black; break;
             case Speed.Fast:
             case Speed.Normal:
