@@ -186,25 +186,65 @@ namespace Ledstrip {
 // A HUB MAY NEVER CALL setController
 
 enum Switch {
+    //% block="straight"
+    //% block.loc.nl="rechtdoor"
     Straight = 0,
+    //% block="left"
+    //% block.loc.nl="linksaf"
     Left = 1,
+    //% block="right"
+    //% block.loc.nl="rechtsaf"
     Right = 2,
 }
 
 enum Uncouple {
+    //% block="on"
+    //% block.loc.nl="aan"
     On = 3,
+    //% block="off"
+    //% block.loc.nl="uit"
     Off = 4,
 }
 enum Speed {
-    Fast = 5,
-    Normal = 6,
-    Slow = 7,
+    //% block="<<<"
+    FastA = 5,
+    //% block=">>>"
+    FastB = 6,
+    //% block.loc.nl="<<"
+    NormalA = 7,
+    //% block.loc.nl=">>"
+    NormalB = 8,
+    //% block.loc.nl="<"
+    SlowA = 9,
+    //% block.loc.nl=">"
+    SlowB = 10,
+    //% block="off"
+    //% block.loc.nl="uit"
+    Off = 11,
 }
 
 enum Pause {
-    Long = 8,
-    Normal = 9,
-    Short = 10,
+    //% block="long"
+    //% block.loc.nl="lang"
+    LongA = 12,
+    //% block="long"
+    //% block.loc.nl="lang"
+    LongB = 13,
+    //% block="normal"
+    //% block.loc.nl="normaal"
+    NormalA = 14,
+    //% block="normal"
+    //% block.loc.nl="normaal"
+    NormalB = 15,
+    //% block="short"
+    //% block.loc.nl="kort"
+    ShortA = 16,
+    //% block="off"
+    //% block.loc.nl="uit"
+    ShortB = 17,
+    //% block="off"
+    //% block.loc.nl="uit"
+    Off = 18,
 }
 
 enum Led {
@@ -271,9 +311,9 @@ const dummy: Service = {_id: 0, _controller: 0, _port: 0, _firstled: 0, _state: 
 
 let CONTROLLER: Service[] = []
 
-// states:      15 (3xSwitch, 2xUncouple, 3xSpeed, 3xPause, 4xReserved)
-// led bases:   0, 15, ..., 180 (12 leds per port)
-// port bases:  0, 200, 400, 600 (4 ports per hub)
+// states:      20 (3xSwitch, 2xUncouple, 7xSpeed, 7xPause, 1xReserved)
+// led bases:   0, 20, ..., 220 (12 leds per port)
+// port bases:  0, 250, 500, 750 (4 ports per hub)
 // hub bases:   0, 1000, 2000, 3000, ..., 19000 (20 hubs)
 
 function msgBase(id: number): number {
@@ -281,8 +321,8 @@ function msgBase(id: number): number {
     for (let i = 0; i < CONTROLLER.length; i++)
         if (CONTROLLER[i]._id == id) {
             base = CONTROLLER[i]._controller * 1000 +
-                   CONTROLLER[i]._port * 200 +
-                   CONTROLLER[i]._firstled * 15
+                   CONTROLLER[i]._port * 250 +
+                   CONTROLLER[i]._firstled * 20
             return base
         }
     return 0
@@ -293,10 +333,10 @@ function msgService(msg: number): Service {
     service._id = 0
     service._controller = Math.floor(msg / 1000)
     msg = msg - service._controller * 1000
-    service._port = Math.floor(msg / 200)
-    msg = msg - service._port * 200
-    service._firstled = Math.floor(msg / 15)
-    service._state = msg - service._firstled * 15
+    service._port = Math.floor(msg / 250)
+    msg = msg - service._port * 250
+    service._firstled = Math.floor(msg / 20)
+    service._state = msg - service._firstled * 20
     return service
 }
 
@@ -305,9 +345,8 @@ function msgService(msg: number): Service {
 //% block.loc.nl="Intelino"
 namespace Intelino {
 
-    //% block="attach IC %id to: controller %controller, port %port, led %firstled"
-    //% block.loc.nl="wijs IC %id toe aan: controller %controller, poort %port, led %firstled"
-    //% port.min=1 port.max=4 firstled.min=1 firstled.max=12
+    //% block="attach IC %id to: %controller %port %firstled"
+    //% block.loc.nl="wijs IC %id toe aan: %controller %port %firstled"
     export function addController(id: number, controller: Controller, port: Port, firstled: Led) {
         CONTROLLER.push( {_id: id, _controller: controller,
                             _port: port, _firstled: firstled, _state: -1})
@@ -359,6 +398,7 @@ messageHandler = (msg: number) => {
     let color: Color
     let leds = 1
     let maxleds = 1
+    let reverse = false
     if (service._controller == CONTROLLERID) {
         switch (service._state) {
             case Switch.Straight: color = Color.Green; break;
@@ -366,46 +406,74 @@ messageHandler = (msg: number) => {
             case Switch.Right: color = Color.Blue; break;
             case Uncouple.On: color = fromRgb(0x84A400); break;
             case Uncouple.Off: color = Color.Black; break;
-            case Speed.Fast:
-            case Speed.Normal:
-            case Speed.Slow: color = Color.Green; maxleds = 3; break;
-            case Pause.Long:
-            case Pause.Normal:
-            case Pause.Short: color = Color.Red; maxleds = 3; break;
+            case Speed.FastA:
+            case Speed.FastB:
+            case Speed.NormalA:
+            case Speed.NormalB:
+            case Speed.SlowA:
+            case Speed.SlowB: color = Color.Green; maxleds = 3; break;
+            case Speed.Off: color = Color.Black; maxleds = 3; break;
+            case Pause.LongA:
+            case Pause.LongB:
+            case Pause.NormalA:
+            case Pause.NormalB:
+            case Pause.ShortA:
+            case Pause.ShortB: color = Color.Red; maxleds = 3; break;
+            case Pause.Off: color = Color.Black; maxleds = 3; break;
         }
         switch (service._state) {
-            case Speed.Fast:
-            case Pause.Long: leds = 3; break;
-            case Speed.Normal:
-            case Pause.Normal: leds = 2; break;
+            case Speed.FastA:
+            case Speed.FastB:
+            case Speed.Off:
+            case Pause.LongA:
+            case Pause.LongB:
+            case Pause.Off: leds = 3; break;
+            case Speed.NormalA:
+            case Speed.NormalB:
+            case Pause.NormalA:
+            case Pause.NormalB: leds = 2; break;
         }
+        switch (service._state) {
+            case Speed.FastB:
+            case Speed.NormalB:
+            case Speed.SlowB:
+            case Pause.LongB:
+            case Pause.NormalB:
+            case Pause.ShortB: reverse = true; break;
+        }
+        let ix: number
+        let clr: Color
         switch (service._port) {
             case Port.P1:
-                    for (let i = 0; i < leds; i++)
-                        PORT1.setPixelColor(service._firstled + i, color)
-                    for (let i = leds; i < maxleds; i++)
-                        PORT1.setPixelColor(service._firstled + i, Color.Black)
+                    for (let i = 0; i < maxleds; i++) {
+                        clr = (i >= leds ? Color.Black : color)
+                        ix = (reverse ? maxleds - i: service._firstled + i)
+                        PORT1.setPixelColor(ix, clr)
+                    }
                     PORT1.show()
                     break;
             case Port.P2:
-                    for (let i = 0; i < leds; i++)
-                        PORT2.setPixelColor(service._firstled + i, color)
-                    for (let i = leds; i < maxleds; i++)
-                        PORT2.setPixelColor(service._firstled + i, Color.Black)
+                    for (let i = 0; i < maxleds; i++) {
+                        clr = (i >= leds ? Color.Black : color)
+                        ix = (reverse ? maxleds - i : service._firstled + i)
+                        PORT2.setPixelColor(ix, clr)
+                    }
                     PORT2.show()
                     break;
             case Port.P3:
-                    for (let i = 0; i < leds; i++)
-                        PORT3.setPixelColor(service._firstled + i, color)
-                    for (let i = leds; i < maxleds; i++)
-                        PORT3.setPixelColor(service._firstled + i, Color.Black)
+                    for (let i = 0; i < maxleds; i++) {
+                        clr = (i >= leds ? Color.Black : color)
+                        ix = (reverse ? maxleds - i : service._firstled + i)
+                        PORT3.setPixelColor(ix, clr)
+                    }
                     PORT3.show()
                     break;
             case Port.P4:
-                    for (let i = 0; i < leds; i++)
-                        PORT4.setPixelColor(service._firstled + i, color)
-                    for (let i = leds; i < maxleds; i++)
-                        PORT4.setPixelColor(service._firstled + i, Color.Black)
+                    for (let i = 0; i < maxleds; i++) {
+                        clr = (i >= leds ? Color.Black : color)
+                        ix = (reverse ? maxleds - i : service._firstled + i)
+                        PORT4.setPixelColor(ix, clr)
+                    }
                     PORT4.show()
                     break;
         }
