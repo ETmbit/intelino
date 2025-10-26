@@ -354,12 +354,13 @@ function setController(controller: Controller) {
 }
 
 messageHandler = (msg: number) => {
-basic.showNumber(msg)
     if (!CONTROLLERID) return
     let service = msgService(msg)
     let color: Color
     let leds = 1
     let maxleds = 1
+basic.showNumber(CONTROLLERID)
+basic.showNumber(service._controller)
     if (service._controller == CONTROLLERID) {
         switch (service._state) {
             case Switch.Straight: color = Color.Green; break;
