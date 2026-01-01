@@ -236,32 +236,32 @@ namespace Intelino {
     }
 
     export enum Gate {
-        //% block="gate 1"
-        //% block.loc.nl="poort 1"
+        //% block="gate A"
+        //% block.loc.nl="poort A"
         Gate1,
-        //% block="gate 2"
-        //% block.loc.nl="poort 2"
+        //% block="gate B"
+        //% block.loc.nl="poort B"
         Gate2,
-        //% block="gate 3"
-        //% block.loc.nl="poort 3"
+        //% block="gate C"
+        //% block.loc.nl="poort C"
         Gate3,
-        //% block="gate 4"
-        //% block.loc.nl="poort 4"
+        //% block="gate D"
+        //% block.loc.nl="poort D"
         Gate4,
-        //% block="gate 5"
-        //% block.loc.nl="poort 5"
+        //% block="gate E"
+        //% block.loc.nl="poort E"
         Gate5,
-        //% block="gate 6"
-        //% block.loc.nl="poort 6"
+        //% block="gate F"
+        //% block.loc.nl="poort 7"
         Gate6,
     }
 
     export enum Position {
-        //% block="line 1"
-        //% block.loc.nl="lijn 1"
+        //% block="line I"
+        //% block.loc.nl="lijn I"
         Position1,
-        //% block="line 2"
-        //% block.loc.nl="lijn 2"
+        //% block="line II"
+        //% block.loc.nl="lijn II"
         Position2,
     }
 
