@@ -456,8 +456,8 @@ namespace Intelino {
     }
 
     //% subcategory="Bediening"
-    //% block="Set uturn %id to state %gate"
-    //% block.loc.nl="Zet omkeren %id in stand %state"
+    //% block="set uturn %id to state %state"
+    //% block.loc.nl="zet omkeren %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
     export function idUturn(id: number, state: State) {
         let i = getId(id)
@@ -465,8 +465,8 @@ namespace Intelino {
     }
 
     //% subcategory="Bediening"
-    //% block="Set uncouple %id to state %gate"
-    //% block.loc.nl="Zet loskoppelen %id in stand %state"
+    //% block=set uncouple %id to state %state"
+    //% block.loc.nl="zet loskoppelen %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
     export function idUncouple(id: number, state: State) {
         let i = getId(id)
@@ -474,8 +474,8 @@ namespace Intelino {
     }
 
     //% subcategory="Bediening"
-    //% block="Set pause %id to state %gate"
-    //% block.loc.nl="Zet pauzeer %id in stand %state"
+    //% block="set pause %id to state %state"
+    //% block.loc.nl="zet pauzeer %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
     export function idWait(id: number, state: State) {
         let i = getId(id)
@@ -483,8 +483,8 @@ namespace Intelino {
     }
 
     //% subcategory="Bediening"
-    //% block="Set speed %id to state %gate"
-    //% block.loc.nl="Zet snelheid %id in stand %state"
+    //% block="set speed %id to state %state"
+    //% block.loc.nl="zet snelheid %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
     export function idSpeed(id: number, state: State) {
         let i = getId(id)
@@ -492,8 +492,8 @@ namespace Intelino {
     }
 
     //% subcategory="Bediening"
-    //% block="Set switch %id to state %gate"
-    //% block.loc.nl="Zet wissel %id in stand %state"
+    //% block="set switch %id to state %state"
+    //% block.loc.nl="zet wissel %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
     export function idSwitch(id: number, state: State) {
         let i = getId(id)
@@ -503,8 +503,8 @@ namespace Intelino {
             setSwitchRight(elements[i].gate, elements[i].offset, elements[i].state)
     }
 
-    //% block="Set %id to state %gate"
-    //% block.loc.nl="Zet %id in stand %state"
+    //% block="set %id to state %state"
+    //% block.loc.nl="zet %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
     export function idState(id: number, state: State) {
         let i = getId(id)
@@ -531,8 +531,8 @@ namespace Intelino {
         }
     }
 
-    //% block="Set %id to the next state"
-    //% block.loc.nl="Zet %id in de volgende stand"
+    //% block="set %id to the next state"
+    //% block.loc.nl="zet %id in de volgende stand"
     //% id.min=1 id.max=12 id.defl=1
     export function idNextState(id: number) {
         let i = getId(id)
@@ -559,8 +559,8 @@ namespace Intelino {
         }
     }
 
-    //% block="Turn all codes in opposite direction"
-    //% block.loc.nl="Draai alle codes in omgekeerde richting"
+    //% block="turn all codes in opposite direction"
+    //% block.loc.nl="draai alle codes in omgekeerde richting"
     function idInvertAll() {
         for (let i = 0; i < elements.length; i++) {
             elements[i].reverse = !elements[i].reverse
@@ -568,8 +568,8 @@ namespace Intelino {
         }
     }
 
-    //% block="Turn %id in opposite direction"
-    //% block.loc.nl="Draai %id in omgekeerde richting"
+    //% block="turn %id in opposite direction"
+    //% block.loc.nl="draai %id in omgekeerde richting"
     //% id.min=1 id.max=12 id.defl=1
     function idInvert(id: number) {
         let i = getId(id)
@@ -577,8 +577,8 @@ namespace Intelino {
         idState(id, elements[i].state)
     }
 
-    //% block="Attach %id to gate %gate, line %position"
-    //% block.loc.nl="Verbind %id met poort %gate, lijn %position"
+    //% block="attach %id to gate %gate, line %position"
+    //% block.loc.nl="verbind %id met poort %gate, lijn %position"
     //% id.min=1 id.max=12 id.defl=1
     export function idConnect(id: number, gate: Gate, position: Position) {
         let i = getId(id)
@@ -587,8 +587,8 @@ namespace Intelino {
         setPixelOffset(gate)
     }
 
-    //% block="Make key %id to a %type"
-    //% block.loc.nl="Maak van knop %id een %type"
+    //% block="make key %id to a %type"
+    //% block.loc.nl="maak van knop %id een %type"
     //% id.min=1 id.max=12 id.defl=1
     export function idType(id: number, type: Type) {
         let i = getId(id)
