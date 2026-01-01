@@ -197,37 +197,83 @@ namespace Intelino {
     leds.push(Ledstrip.create(DigitalPin.P15, 6))
 
     export enum Gate {
+        //% block="gate 1"
+        //% block.loc.nl="poort 1"
         Gate1,
+        //% block="gate 2"
+        //% block.loc.nl="poort 2"
         Gate2,
+        //% block="gate 3"
+        //% block.loc.nl="poort 3"
         Gate3,
+        //% block="gate 4"
+        //% block.loc.nl="poort 4"
         Gate4,
+        //% block="gate 5"
+        //% block.loc.nl="poort 5"
         Gate5,
+        //% block="gate 6"
+        //% block.loc.nl="poort 6"
         Gate6,
     }
 
     export enum Position {
+        //% block="line 1"
+        //% block.loc.nl="lijn 1"
         Position1,
+        //% block="line 2"
+        //% block.loc.nl="lijn 2"
         Position2,
     }
 
     export enum Type {
+        //% block="speed control"
+        //% block.loc.nl="snelheidsregelaar"
         Speed,
+        //% block="stopping place"
+        //% block.loc.nl="halte"
         Wait,
+        //% block="switch to the left"
+        //% block.loc.nl="wissel naar links"
         SwitchLeft,
+        //% block="switch to the right"
+        //% block.loc.nl="wissel naar rechts"
         SwitchRight,
+        //% block="uncoupler"
+        //% block.loc.nl="ontkoppelaar"
         Uncouple,
+        //% block="uturn"
+        //% block.loc.nl="omkering"
         Uturn,
     }
 
     export enum State {
+        //% block="off"
+        //% block.loc.nl="uit"
         Inactive = 0,
+        //% block="on"
+        //% block.loc.nl="aan"
         Active = 1,
+        //% block="normal"
+        //% block.loc.nl="normaal"
         Normal = 2,
+        //% block="slow"
+        //% block.loc.nl="langzaam"
         Slow = 1,
+        //% block="fast"
+        //% block.loc.nl="snel"
         Fast = 3,
+        //% block="short"
+        //% block.loc.nl="kort"
         Short = 1,
+        //% block="long"
+        //% block.loc.nl="lang"
         Long = 3,
+        //% block="bent"
+        //% block.loc.nl="afslaan"
         Bent = 1,
+        //% block="straight ahead"
+        //% block.loc.nl="rechtdoor"
         Straight = 2,
     }
 
