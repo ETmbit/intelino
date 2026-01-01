@@ -58,7 +58,7 @@ namespace Ledstrip {
         }
 
         setPixelColor(pixel: number, color: Color, white: number = 0): void {
-            if (pixel < 0 || pixel >= this.max)
+            if (pixel < 0 || pixel >= 8)
                 return;
             let rgb = fromColor(color)
             let red = (rgb >> 16) & 0xFF;
@@ -68,7 +68,7 @@ namespace Ledstrip {
         }
 
         setRGB(red: number, green: number, blue: number, white: number = 0) {
-            for (let i = 0; i < this.max; ++i)
+            for (let i = 0; i < 8; ++i)
                 this.setPixelRGB(i, red, green, blue, white)
         }
 
@@ -172,310 +172,379 @@ namespace Ledstrip {
     }
 }
 
+///////////////////////
+//###################//
+//##               ##//
+//##  intelino.ts  ##//
+//##               ##//
+//###################//
+///////////////////////
 
-/////////////////////
-//#################//
-//##             ##//
-//## intelino.ts ##//
-//##             ##//
-//#################//
-/////////////////////
-
-// IMPORTANT NOTE:
-// A CONTROLLER MUST AND MAY ONLY CALL setController
-// A HUB MAY NEVER CALL setController
-
-enum Switch {
-    //% block="straight"
-    //% block.loc.nl="rechtdoor"
-    Straight = 0,
-    //% block="left"
-    //% block.loc.nl="linksaf"
-    Left = 1,
-    //% block="right"
-    //% block.loc.nl="rechtsaf"
-    Right = 2,
-}
-
-enum Uncouple {
-    //% block="on"
-    //% block.loc.nl="aan"
-    On = 3,
-    //% block="off"
-    //% block.loc.nl="uit"
-    Off = 4,
-}
-enum Speed {
-    //% block="<<<"
-    FastA = 5,
-    //% block=">>>"
-    FastB = 6,
-    //% block="<<"
-    NormalA = 7,
-    //% block=">>"
-    NormalB = 8,
-    //% block="<"
-    SlowA = 9,
-    //% block=">"
-    SlowB = 10,
-    //% block="off"
-    //% block.loc.nl="uit"
-    Off = 11,
-}
-
-enum Pause {
-    //% block="< long <"
-    //% block.loc.nl="< lang <"
-    LongA = 12,
-    //% block="> long >"
-    //% block.loc.nl="> lang >"
-    LongB = 13,
-    //% block="< normal <"
-    //% block.loc.nl="< normaal <"
-    NormalA = 14,
-    //% block="> normal >"
-    //% block.loc.nl="> normaal >"
-    NormalB = 15,
-    //% block="< short <"
-    //% block.loc.nl="< kort <"
-    ShortA = 16,
-    //% block="> short >"
-    //% block.loc.nl="> kort >"
-    ShortB = 17,
-    //% block="off"
-    //% block.loc.nl="uit"
-    Off = 18,
-}
-
-enum Led {
-    L1,
-    L2,
-    L3,
-    L4,
-    L5,
-    L6,
-    L7,
-    L8,
-    L9,
-    L10,
-    L11,
-    L12,
-}
-
-enum Port {
-    P1,
-    P2,
-    P3,
-    P4,
-}
-
-enum Controller {
-    C1,
-    C2,
-    C3,
-    C4,
-    C5,
-    C6,
-    C7,
-    C8,
-    C9,
-    C10,
-    C11,
-    C12,
-    C13,
-    C14,
-    C15,
-    C16,
-    C17,
-    C18,
-    C19,
-    C20,
-}
-
-let PORT1: Ledstrip.Device
-let PORT2: Ledstrip.Device
-let PORT3: Ledstrip.Device
-let PORT4: Ledstrip.Device
-
-let CONTROLLERID: Controller = -1
-
-interface Service {
-    _id: number
-    _controller: number
-    _port: number
-    _firstled: number
-    _state: number
-}
-
-const dummy: Service = {_id: 0, _controller: 0, _port: 0, _firstled: 0, _state: 0}
-
-let CONTROLLER: Service[] = []
-
-// states:      20 (3xSwitch, 2xUncouple, 7xSpeed, 7xPause, 1xReserved)
-// led bases:   0, 20, ..., 220 (12 leds per port)
-// port bases:  0, 250, 500, 750 (4 ports per hub)
-// hub bases:   0, 1000, 2000, 3000, ..., 19000 (20 hubs)
-
-function msgBase(id: number): number {
-    let base: number
-    for (let i = 0; i < CONTROLLER.length; i++)
-        if (CONTROLLER[i]._id == id) {
-            base = CONTROLLER[i]._controller * 1000 +
-                   CONTROLLER[i]._port * 250 +
-                   CONTROLLER[i]._firstled * 20
-            return base
-        }
-    return 0
-}
-
-function msgService(msg: number): Service {
-    let service: Service = dummy
-    service._id = 0
-    service._controller = Math.floor(msg / 1000)
-    msg = msg - service._controller * 1000
-    service._port = Math.floor(msg / 250)
-    msg = msg - service._port * 250
-    service._firstled = Math.floor(msg / 20)
-    service._state = msg - service._firstled * 20
-    return service
-}
-
-//% color="#FFC90E" icon="\uf207"
+//% color="#00CC00" icon="\uf1e3"
 //% block="Intelino"
 //% block.loc.nl="Intelino"
 namespace Intelino {
 
-    //% block="attach IC %id to: %controller %port %firstled"
-    //% block.loc.nl="wijs IC %id toe aan: %controller %port %firstled"
-    export function addController(id: number, controller: Controller, port: Port, firstled: Led) {
-        CONTROLLER.push( {_id: id, _controller: controller,
-                            _port: port, _firstled: firstled, _state: -1})
+    // per gate there are 2 positions of max 3 leds each
+    let leds: Ledstrip.Device[] = []
+    leds.push(Ledstrip.create(DigitalPin.P0, 6))
+    leds.push(Ledstrip.create(DigitalPin.P1, 6))
+    leds.push(Ledstrip.create(DigitalPin.P2, 6))
+    leds.push(Ledstrip.create(DigitalPin.P13, 6))
+    leds.push(Ledstrip.create(DigitalPin.P14, 6))
+    leds.push(Ledstrip.create(DigitalPin.P15, 6))
+
+    export enum Gate {
+        Gate1,
+        Gate2,
+        Gate3,
+        Gate4,
+        Gate5,
+        Gate6,
     }
 
-    //% block="uncoupling at IC %id is: %state "
-    //% block.loc.nl="ontkoppeling bij IC %id is: %state"
-    export function trainUngear(id: number, state: Uncouple) {
-        radio.sendNumber(msgBase(id) + state)
+    export enum Position {
+        Position1,
+        Position2,
     }
 
-    //% block="speed at IC %id is: %speed "
-    //% block.loc.nl="snelheid bij IC %id is: %speed"
-    export function trainSpeed(id: number, speed: Speed) {
-        radio.sendNumber(msgBase(id) + speed)
+    export enum Type {
+        Speed,
+        Wait,
+        SwitchLeft,
+        SwitchRight,
+        Uncouple,
+        Uturn,
     }
 
-    //% block="stop at IC %id is: %speed "
-    //% block.loc.nl="stop bij IC %id is: %speed"
-    export function trackPause(id: number, time: Pause) {
-        radio.sendNumber(msgBase(id) + time)
+    export enum State {
+        Inactive = 0,
+        Active = 1,
+        Normal = 2,
+        Slow = 1,
+        Fast = 3,
+        Short = 1,
+        Long = 3,
+        Bent = 1,
+        Straight = 2,
     }
 
-    //% block="switch at IC %id is: %speed "
-    //% block.loc.nl="wissel bij IC %id is: %speed"
-    export function trackSwitch(id: number, direction: Switch) {
-        radio.sendNumber(msgBase(id) + direction)
+    interface Element {
+        id: number
+        type: Type
+        state: State
+        gate: Gate
+        position: Position
+        offset: number
+        reverse: boolean
     }
-}
+    let elements: Element[] = []
 
-// CONTROLLER CODE
-// A CONTROLLER MUST AND MAY ONLY CALL setController
-
-function setController(controller: Controller) {
-    CONTROLLERID = controller
-    PORT1 = Ledstrip.create(DigitalPin.P19, 25)
-    PORT2 = Ledstrip.create(DigitalPin.P0, 25)
-    PORT3 = Ledstrip.create(DigitalPin.P1, 25)
-    PORT4 = Ledstrip.create(DigitalPin.P2, 25)
-    PORT1.setClear(); PORT1.show()
-    PORT2.setClear(); PORT1.show()
-    PORT3.setClear(); PORT1.show()
-    PORT4.setClear(); PORT1.show()
-}
-
-messageHandler = (msg: number) => {
-    if (CONTROLLERID < 0) return
-    let service = msgService(msg)
-    let color: Color
-    let leds = 1
-    let maxleds = 1
-    let reverse = false
-    if (service._controller == CONTROLLERID) {
-        switch (service._state) {
-            case Switch.Straight: color = Color.Green; break;
-            case Switch.Left: color = Color.Red; break;
-            case Switch.Right: color = Color.Blue; break;
-            case Uncouple.On: color = fromRgb(0x84A400); break;
-            case Uncouple.Off: color = Color.Black; break;
-            case Speed.FastA:
-            case Speed.FastB:
-            case Speed.NormalA:
-            case Speed.NormalB:
-            case Speed.SlowA:
-            case Speed.SlowB: color = Color.Green; maxleds = 3; break;
-            case Speed.Off: color = Color.Black; maxleds = 3; break;
-            case Pause.LongA:
-            case Pause.LongB:
-            case Pause.NormalA:
-            case Pause.NormalB:
-            case Pause.ShortA:
-            case Pause.ShortB: color = Color.Red; maxleds = 3; break;
-            case Pause.Off: color = Color.Black; maxleds = 3; break;
+    radio.onReceivedNumber(function (key: number) {
+        if (key == 99) {
+            // change element type
+            idInvertAll()
         }
-        switch (service._state) {
-            case Speed.FastA:
-            case Speed.FastB:
-            case Speed.Off:
-            case Pause.LongA:
-            case Pause.LongB:
-            case Pause.Off: leds = 3; break;
-            case Speed.NormalA:
-            case Speed.NormalB:
-            case Pause.NormalA:
-            case Pause.NormalB: leds = 2; break;
+        else
+            if (key >= 12) {
+                // set element inactive
+                idState(key - 12, State.Inactive)
+            }
+            else {
+                // change element state
+                idNextState(key)
+            }
+    })
+
+    function setPixelOffset(gate: Gate) {
+        let typcnt = [3, 3, 1, 1, 1, 1] // number of pixels per element type
+        let offset = 0
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].gate == gate && elements[i].position == Position.Position1) {
+                offset = typcnt[elements[i].type]
+                break
+            }
         }
-        switch (service._state) {
-            case Speed.FastB:
-            case Speed.NormalB:
-            case Speed.SlowB:
-            case Pause.LongB:
-            case Pause.NormalB:
-            case Pause.ShortB: reverse = true; break;
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].gate == gate && elements[i].position == Position.Position2) {
+                elements[i].offset = offset
+                break
+            }
         }
-        let ix: number
-        let clr: Color
-        switch (service._port) {
-            case Port.P1:
-                    for (let i = 0; i < maxleds; i++) {
-                        clr = (i >= leds ? Color.Black : color)
-                        ix = (reverse ? maxleds - i: service._firstled + i)
-                        PORT1.setPixelColor(ix, clr)
-                    }
-                    PORT1.show()
-                    break;
-            case Port.P2:
-                    for (let i = 0; i < maxleds; i++) {
-                        clr = (i >= leds ? Color.Black : color)
-                        ix = (reverse ? maxleds - i : service._firstled + i)
-                        PORT2.setPixelColor(ix, clr)
-                    }
-                    PORT2.show()
-                    break;
-            case Port.P3:
-                    for (let i = 0; i < maxleds; i++) {
-                        clr = (i >= leds ? Color.Black : color)
-                        ix = (reverse ? maxleds - i : service._firstled + i)
-                        PORT3.setPixelColor(ix, clr)
-                    }
-                    PORT3.show()
-                    break;
-            case Port.P4:
-                    for (let i = 0; i < maxleds; i++) {
-                        clr = (i >= leds ? Color.Black : color)
-                        ix = (reverse ? maxleds - i : service._firstled + i)
-                        PORT4.setPixelColor(ix, clr)
-                    }
-                    PORT4.show()
-                    break;
+    }
+
+    function setSpeed(gate: Gate, pixel: number, state: State, reverse: boolean) {
+        leds[gate].setPixelColor(pixel, Color.Black)
+        leds[gate].setPixelColor(pixel + 1, Color.Black)
+        leds[gate].setPixelColor(pixel + 2, Color.Black)
+        if (reverse) {
+            switch (state) {
+                // no individual break after the next cases
+                case State.Fast: leds[gate].setPixelColor(pixel, Color.Green)
+                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Green)
+                case State.Slow: leds[gate].setPixelColor(pixel + 2, Color.Green)
+                    break
+            }
         }
+        else {
+            switch (state) {
+                // no individual break after the next cases
+                case State.Fast: leds[gate].setPixelColor(pixel + 2, Color.Green)
+                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Green)
+                case State.Slow: leds[gate].setPixelColor(pixel, Color.Green)
+                    break
+            }
+        }
+        leds[gate].show()
+    }
+
+    function setWait(gate: Gate, pixel: number, state: State, reverse: boolean) {
+        leds[gate].setPixelColor(pixel, Color.Black)
+        leds[gate].setPixelColor(pixel + 1, Color.Black)
+        leds[gate].setPixelColor(pixel + 2, Color.Black)
+        if (reverse) {
+            switch (state) {
+                // no individual break after the next cases
+                case State.Long: leds[gate].setPixelColor(pixel, Color.Red)
+                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Red)
+                case State.Short: leds[gate].setPixelColor(pixel + 2, Color.Red)
+                    break
+            }
+        }
+        else {
+            switch (state) {
+                // no individual break after the next cases
+                case State.Long: leds[gate].setPixelColor(pixel + 2, Color.Red)
+                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Red)
+                case State.Short: leds[gate].setPixelColor(pixel, Color.Red)
+                    break
+            }
+        }
+        leds[gate].show()
+    }
+
+    function setSwitchLeft(gate: Gate, pixel: number, state: State) {
+        switch (state) {
+            case State.Inactive:
+                leds[gate].setPixelColor(pixel, Color.Black)
+                break
+            case State.Bent:
+                leds[gate].setPixelColor(pixel, Color.Red)
+                break
+            case State.Straight:
+                leds[gate].setPixelColor(pixel, Color.Green)
+                break
+        }
+        leds[gate].show()
+    }
+
+    function setSwitchRight(gate: Gate, pixel: number, state: State) {
+        switch (state) {
+            case State.Inactive:
+                leds[gate].setPixelColor(pixel, Color.Black)
+                break
+            case State.Bent:
+                leds[gate].setPixelColor(pixel, Color.Blue)
+                break
+            case State.Straight:
+                leds[gate].setPixelColor(pixel, Color.Green)
+                break
+        }
+        leds[gate].show()
+
+    }
+
+    function setUncouple(gate: Gate, pixel: number, state: State) {
+        switch (state) {
+            case State.Inactive:
+                leds[gate].setPixelColor(pixel, Color.Black)
+                break
+            case State.Active:
+                leds[gate].setPixelColor(pixel, Color.Yellow)
+                break
+        }
+        leds[gate].show()
+    }
+
+    function setUturn(gate: Gate, pixel: number, state: State) {
+        switch (state) {
+            case State.Inactive:
+                leds[gate].setPixelColor(pixel, Color.Black)
+                break
+            case State.Active:
+                leds[gate].setPixelColor(pixel, Color.Blue)
+                break
+        }
+        leds[gate].show()
+    }
+
+    function getNextState(type: Type, state: State): State {
+        state += 1
+        switch (type) {
+            case Type.Speed: if (state < State.Slow || state > State.Fast)
+                state = State.Slow
+                break
+            case Type.Wait: if (state < State.Short || state > State.Long)
+                state = State.Short
+                break
+            case Type.SwitchLeft:
+            case Type.SwitchRight: if (state < State.Bent || state > State.Straight)
+                state = State.Bent
+                break
+            case Type.Uncouple:
+            case Type.Uturn: if (state < State.Inactive || state > State.Active)
+                state = State.Inactive
+                break
+            default: state = State.Inactive
+        }
+        return state
+    }
+
+    function getId(id: number): number {
+        let i: number
+        for (i = 0; i < elements.length; i++)
+            if (elements[i].id == id) break
+        if (i == elements.length)
+            elements.push({
+                id: id, type: Type.Speed, state: State.Inactive, gate: Gate.Gate1,
+                position: Position.Position1, offset: 0, reverse: false
+            })
+        return i
+    }
+
+    //% block="Set uturn %id to state %gate"
+    //% block.loc.nl="Zet omkeren %id in stand %state"
+    //$ id.min=1 id.max=12
+    export function idUturn(id: number, state: State) {
+        let i = getId(id)
+        setUturn(elements[i].gate, elements[i].offset, elements[i].state)
+    }
+
+    //% block="Set uncouple %id to state %gate"
+    //% block.loc.nl="Zet loskoppelen %id in stand %state"
+    //$ id.min=1 id.max=12
+    export function idUncouple(id: number, state: State) {
+        let i = getId(id)
+        setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
+    }
+
+    //% block="Set pause %id to state %gate"
+    //% block.loc.nl="Zet pauzeer %id in stand %state"
+    //$ id.min=1 id.max=12
+    export function idWait(id: number, state: State) {
+        let i = getId(id)
+        setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+    }
+
+    //% block="Set speed %id to state %gate"
+    //% block.loc.nl="Zet snelheid %id in stand %state"
+    //$ id.min=1 id.max=12
+    export function idSpeed(id: number, state: State) {
+        let i = getId(id)
+        setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+    }
+
+    //% block="Set switch %id to state %gate"
+    //% block.loc.nl="Zet wissel %id in stand %state"
+    //$ id.min=1 id.max=12
+    export function idSwitch(id: number, state: State) {
+        let i = getId(id)
+        if (elements[i].type == Type.SwitchLeft)
+            setSwitchLeft(elements[i].gate, elements[i].offset, elements[i].state)
+        else
+            setSwitchRight(elements[i].gate, elements[i].offset, elements[i].state)
+    }
+
+    //% block="Set %id to state %gate"
+    //% block.loc.nl="Zet %id in stand %state"
+    //$ id.min=1 id.max=12
+    export function idState(id: number, state: State) {
+        let i = getId(id)
+        elements[i].state = state
+        switch (elements[i].type) {
+            case Type.Speed:
+                setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+                break
+            case Type.Wait:
+                setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+                break
+            case Type.SwitchLeft:
+                setSwitchLeft(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+            case Type.SwitchRight:
+                setSwitchRight(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+            case Type.Uncouple:
+                setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+            case Type.Uturn:
+                setUturn(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+        }
+    }
+
+    //% block="Set %id to the next state"
+    //% block.loc.nl="Zet %id in de volgende stand"
+    //$ id.min=1 id.max=12
+    export function idNextState(id: number) {
+        let i = getId(id)
+        elements[i].state = getNextState(elements[i].type, elements[i].state)
+        switch (elements[i].type) {
+            case Type.Speed:
+                setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+                break
+            case Type.Wait:
+                setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+                break
+            case Type.SwitchLeft:
+                setSwitchLeft(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+            case Type.SwitchRight:
+                setSwitchRight(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+            case Type.Uncouple:
+                setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+            case Type.Uturn:
+                setUturn(elements[i].gate, elements[i].offset, elements[i].state)
+                break
+        }
+    }
+
+    //% block="Turn all codes in opposite direction"
+    //% block.loc.nl="Draai alle codes in omgekeerde richting"
+    function idInvertAll() {
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].reverse = !elements[i].reverse
+            idState(elements[i].id, elements[i].state)
+        }
+    }
+
+    //% block="Turn %id in opposite direction"
+    //% block.loc.nl="Draai %id in omgekeerde richting"
+    //$ id.min=1 id.max=12
+    function idInvert(id: number) {
+        let i = getId(id)
+        elements[i].reverse = !elements[i].reverse
+        idState(id, elements[i].state)
+    }
+
+    //% block="Attach %id to gate %gate, line %position"
+    //% block.loc.nl="Verbind %id met poort %gate, lijn %position"
+    //$ id.min=1 id.max=12
+    export function idConnect(id: number, gate: Gate, position: Position) {
+        let i = getId(id)
+        elements[i].gate = gate
+        elements[i].position = position
+        setPixelOffset(gate)
+    }
+
+    //% block="Make key %id to a %type"
+    //% block.loc.nl="Maak van knop %id een %type"
+    //$ id.min=1 id.max=12
+    export function idType(id: number, type: Type) {
+        let i = getId(id)
+        elements[i].type = type
+        setPixelOffset(elements[i].gate)
     }
 }
