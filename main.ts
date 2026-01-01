@@ -465,7 +465,7 @@ namespace Intelino {
     }
 
     //% subcategory="Bediening"
-    //% block=set uncouple %id to state %state"
+    //% block="set uncouple %id to state %state"
     //% block.loc.nl="zet loskoppelen %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
     export function idUncouple(id: number, state: State) {
