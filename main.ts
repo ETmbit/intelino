@@ -617,8 +617,8 @@ namespace Intelino {
         setPixelOffset(gate)
     }
 
-    //% block="make key %id to a %type"
-    //% block.loc.nl="maak van knop %id een %type"
+    //% block="make %id to be a %type"
+    //% block.loc.nl="maak van %id een %type"
     export function idType(id: Id, type: Type) {
         let i = getId(id)
         elements[i].type = type
