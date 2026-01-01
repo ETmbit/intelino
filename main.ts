@@ -196,6 +196,45 @@ namespace Intelino {
     leds.push(Ledstrip.create(DigitalPin.P14, 6))
     leds.push(Ledstrip.create(DigitalPin.P15, 6))
 
+    export enum Id {
+        //% block="1"
+        //% block.loc.nl="1"
+        Id1 = 1,
+        //% block="2"
+        //% block.loc.nl="2"
+        Id2 = 2,
+        //% block="3"
+        //% block.loc.nl="3"
+        Id3 = 3,
+        //% block="4"
+        //% block.loc.nl="4"
+        Id4 = 4,
+        //% block="5"
+        //% block.loc.nl="5"
+        Id5 = 5,
+        //% block="6"
+        //% block.loc.nl="6"
+        Id6 = 6,
+        //% block="7"
+        //% block.loc.nl="7"
+        Id7 = 7,
+        //% block="8"
+        //% block.loc.nl="8"
+        Id8 = 8,
+        //% block="9"
+        //% block.loc.nl="9"
+        Id9 = 9,
+        //% block="10"
+        //% block.loc.nl="10"
+        Id10 = 10,
+        //% block="11"
+        //% block.loc.nl="11"
+        Id11 = 11,
+        //% block="12"
+        //% block.loc.nl="12"
+        Id12 = 12,
+    }
+
     export enum Gate {
         //% block="gate 1"
         //% block.loc.nl="poort 1"
@@ -458,8 +497,7 @@ namespace Intelino {
     //% subcategory="Bediening"
     //% block="set uturn %id to state %state"
     //% block.loc.nl="zet omkeren %id in stand %state"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idUturn(id: number, state: State) {
+    export function idUturn(id: Id, state: State) {
         let i = getId(id)
         setUturn(elements[i].gate, elements[i].offset, elements[i].state)
     }
@@ -467,8 +505,7 @@ namespace Intelino {
     //% subcategory="Bediening"
     //% block="set uncouple %id to state %state"
     //% block.loc.nl="zet loskoppelen %id in stand %state"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idUncouple(id: number, state: State) {
+    export function idUncouple(id: Id, state: State) {
         let i = getId(id)
         setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
     }
@@ -476,8 +513,7 @@ namespace Intelino {
     //% subcategory="Bediening"
     //% block="set pause %id to state %state"
     //% block.loc.nl="zet pauzeer %id in stand %state"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idWait(id: number, state: State) {
+    export function idWait(id: Id, state: State) {
         let i = getId(id)
         setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
     }
@@ -485,8 +521,7 @@ namespace Intelino {
     //% subcategory="Bediening"
     //% block="set speed %id to state %state"
     //% block.loc.nl="zet snelheid %id in stand %state"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idSpeed(id: number, state: State) {
+    export function idSpeed(id: Id, state: State) {
         let i = getId(id)
         setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
     }
@@ -494,8 +529,7 @@ namespace Intelino {
     //% subcategory="Bediening"
     //% block="set switch %id to state %state"
     //% block.loc.nl="zet wissel %id in stand %state"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idSwitch(id: number, state: State) {
+    export function idSwitch(id: Id, state: State) {
         let i = getId(id)
         if (elements[i].type == Type.SwitchLeft)
             setSwitchLeft(elements[i].gate, elements[i].offset, elements[i].state)
@@ -505,8 +539,7 @@ namespace Intelino {
 
     //% block="set %id to state %state"
     //% block.loc.nl="zet %id in stand %state"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idState(id: number, state: State) {
+    export function idState(id: Id, state: State) {
         let i = getId(id)
         elements[i].state = state
         switch (elements[i].type) {
@@ -533,8 +566,7 @@ namespace Intelino {
 
     //% block="set %id to the next state"
     //% block.loc.nl="zet %id in de volgende stand"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idNextState(id: number) {
+    export function idNextState(id: Id) {
         let i = getId(id)
         elements[i].state = getNextState(elements[i].type, elements[i].state)
         switch (elements[i].type) {
@@ -570,8 +602,7 @@ namespace Intelino {
 
     //% block="turn %id in opposite direction"
     //% block.loc.nl="draai %id in omgekeerde richting"
-    //% id.min=1 id.max=12 id.defl=1
-    function idInvert(id: number) {
+    function idInvert(id: Id) {
         let i = getId(id)
         elements[i].reverse = !elements[i].reverse
         idState(id, elements[i].state)
@@ -579,8 +610,7 @@ namespace Intelino {
 
     //% block="attach %id to gate %gate, line %position"
     //% block.loc.nl="verbind %id met poort %gate, lijn %position"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idConnect(id: number, gate: Gate, position: Position) {
+    export function idConnect(id: Id, gate: Gate, position: Position) {
         let i = getId(id)
         elements[i].gate = gate
         elements[i].position = position
@@ -589,8 +619,7 @@ namespace Intelino {
 
     //% block="make key %id to a %type"
     //% block.loc.nl="maak van knop %id een %type"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idType(id: number, type: Type) {
+    export function idType(id: Id, type: Type) {
         let i = getId(id)
         elements[i].type = type
         setPixelOffset(elements[i].gate)
