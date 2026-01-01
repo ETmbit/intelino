@@ -180,6 +180,8 @@ namespace Ledstrip {
 //###################//
 ///////////////////////
 
+let elementHandler: handler
+
 //% color="#00CC00" icon="\uf1e3"
 //% block="Intelino"
 //% block.loc.nl="Intelino"
@@ -241,19 +243,7 @@ namespace Intelino {
     let elements: Element[] = []
 
     radio.onReceivedNumber(function (key: number) {
-        if (key == 99) {
-            // change element type
-            idInvertAll()
-        }
-        else
-            if (key >= 12) {
-                // set element inactive
-                idState(key - 12, State.Inactive)
-            }
-            else {
-                // change element state
-                idNextState(key)
-            }
+        if (elementHandler) elementHandler()
     })
 
     function setPixelOffset(gate: Gate) {
@@ -412,6 +402,14 @@ namespace Intelino {
         return i
     }
 
+    //% color="#FFCC00"
+    //% block="when a command received"
+    //% block.loc.nl="wanneer een opdracht is ontvangen"
+    export function onOutOfField(code: () => void): void {
+        elementHandler = code
+    }
+
+    //% subcategory="Bediening"
     //% block="Set uturn %id to state %gate"
     //% block.loc.nl="Zet omkeren %id in stand %state"
     //$ id.min=1 id.max=12
@@ -420,6 +418,7 @@ namespace Intelino {
         setUturn(elements[i].gate, elements[i].offset, elements[i].state)
     }
 
+    //% subcategory="Bediening"
     //% block="Set uncouple %id to state %gate"
     //% block.loc.nl="Zet loskoppelen %id in stand %state"
     //$ id.min=1 id.max=12
@@ -428,6 +427,7 @@ namespace Intelino {
         setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
     }
 
+    //% subcategory="Bediening"
     //% block="Set pause %id to state %gate"
     //% block.loc.nl="Zet pauzeer %id in stand %state"
     //$ id.min=1 id.max=12
@@ -436,6 +436,7 @@ namespace Intelino {
         setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
     }
 
+    //% subcategory="Bediening"
     //% block="Set speed %id to state %gate"
     //% block.loc.nl="Zet snelheid %id in stand %state"
     //$ id.min=1 id.max=12
@@ -444,6 +445,7 @@ namespace Intelino {
         setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
     }
 
+    //% subcategory="Bediening"
     //% block="Set switch %id to state %gate"
     //% block.loc.nl="Zet wissel %id in stand %state"
     //$ id.min=1 id.max=12
