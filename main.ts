@@ -490,7 +490,7 @@ namespace Intelino {
     //% color="#FF8800"
     //% block="when receiving key"
     //% block.loc.nl="wanneer knop wordt ontvangen"
-    //% draggableParameters
+    //% draggableParameters="id"
     export function onElement(code: (id: number) => void): void {
         elementHandler = code
     }
