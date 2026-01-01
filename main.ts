@@ -180,7 +180,7 @@ namespace Ledstrip {
 //###################//
 ///////////////////////
 
-let elementHandler: handler
+let elementHandler: prmhandler
 
 //% color="#FFCC00" icon="\uf238"
 //% block="Intelino"
@@ -328,7 +328,7 @@ namespace Intelino {
     let elements: Element[] = []
 
     radio.onReceivedNumber(function (key: number) {
-        if (elementHandler) elementHandler()
+        if (elementHandler) elementHandler(key)
     })
 
     function setPixelOffset(gate: Gate) {
@@ -488,9 +488,9 @@ namespace Intelino {
     }
 
     //% color="#FF8800"
-    //% block="when a command received"
-    //% block.loc.nl="wanneer een opdracht is ontvangen"
-    export function onElement(code: () => void): void {
+    //% block="when key %id received"
+    //% block.loc.nl="wanneer knop %id is ontvangen"
+    export function onElement(code: (id: Id) => void): void {
         elementHandler = code
     }
 
