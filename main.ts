@@ -182,7 +182,7 @@ namespace Ledstrip {
 
 let elementHandler: handler
 
-//% color="#00CC00" icon="\uf1e3"
+//% color="#FFCC00" icon="\uf238"
 //% block="Intelino"
 //% block.loc.nl="Intelino"
 namespace Intelino {
@@ -487,10 +487,10 @@ namespace Intelino {
         return i
     }
 
-    //% color="#FFCC00"
+    //% color="#FF8800"
     //% block="when a command received"
     //% block.loc.nl="wanneer een opdracht is ontvangen"
-    export function onOutOfField(code: () => void): void {
+    export function onElement(code: () => void): void {
         elementHandler = code
     }
 
