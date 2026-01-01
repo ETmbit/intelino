@@ -182,6 +182,10 @@ namespace Ledstrip {
 
 let elementHandler: prmhandler
 
+radio.onReceivedNumber(function (key: number) {
+    if (elementHandler) elementHandler(key)
+})
+
 //% color="#FFCC00" icon="\uf238"
 //% block="Intelino"
 //% block.loc.nl="Intelino"
@@ -326,10 +330,6 @@ namespace Intelino {
         reverse: boolean
     }
     let elements: Element[] = []
-
-    radio.onReceivedNumber(function (key: number) {
-        if (elementHandler) elementHandler(key)
-    })
 
     function setPixelOffset(gate: Gate) {
         let typcnt = [3, 3, 1, 1, 1, 1] // number of pixels per element type
