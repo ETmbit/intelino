@@ -209,12 +209,12 @@ basic.showNumber(key)
     ALTDOWN = false
     if (key < 90) {
         if (key > 24) {
-            ALTUP = true
+            ALTDOWN = true
             key -= 24
         }
         else
         if (key > 12) {
-            ALTDOWN = true
+            ALTUP = true
             key -= 12
         }
     }
@@ -731,7 +731,6 @@ namespace Intelino {
         let i = getId(id)
         elements[i].gate = gate
         elements[i].position = position
-        elements[i].state = State.Inactive
         setPixelOffset(gate)
     }
 
