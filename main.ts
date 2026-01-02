@@ -204,6 +204,7 @@ const BUTTONUP = 98
 const BUTTONDOWN = 99
 
 radio.onReceivedNumber(function (key: number) {
+basic.showNumber(key)
     ALTUP = false
     ALTDOWN = false
     if (key < 90) {
@@ -217,6 +218,8 @@ radio.onReceivedNumber(function (key: number) {
             key -= 12
         }
     }
+if (ALTUP) basic.showArrow(ArrowNames.North)
+if (ALTDOWN) basic.showArrow(ArrowNames.South)
     if (elementHandler) elementHandler(key)
     switch (key) {
         case Intelino.Id.Id1: if (key1Handler) key1Handler(); break;
@@ -290,32 +293,32 @@ namespace Intelino {
     }
 
     export enum Gate {
-        //% block="gate A"
-        //% block.loc.nl="poort A"
+        //% block="A"
+        //% block.loc.nl="A"
         Gate1,
-        //% block="gate B"
-        //% block.loc.nl="poort B"
+        //% block="B"
+        //% block.loc.nl="B"
         Gate2,
-        //% block="gate C"
-        //% block.loc.nl="poort C"
+        //% block="C"
+        //% block.loc.nl="C"
         Gate3,
-        //% block="gate D"
-        //% block.loc.nl="poort D"
+        //% block="D"
+        //% block.loc.nl="D"
         Gate4,
-        //% block="gate E"
-        //% block.loc.nl="poort E"
+        //% block="E"
+        //% block.loc.nl="E"
         Gate5,
-        //% block="gate F"
-        //% block.loc.nl="poort 7"
+        //% block="F"
+        //% block.loc.nl="F"
         Gate6,
     }
 
     export enum Position {
-        //% block="line I"
-        //% block.loc.nl="lijn I"
+        //% block="I"
+        //% block.loc.nl="I"
         Position1,
-        //% block="line II"
-        //% block.loc.nl="lijn II"
+        //% block="II"
+        //% block.loc.nl="II"
         Position2,
     }
 
@@ -596,13 +599,13 @@ namespace Intelino {
 
     //% block="the yellow upper button"
     //% block.loc.nl="de bovenste gele knop"
-    export function isButtonUp(): number {
+    export function buttonUp(): number {
         return BUTTONUP
     }
 
     //% block="the yellow lower button"
     //% block.loc.nl="de onderste gele knop"
-    export function isButtonDown(): number {
+    export function buttonDown(): number {
         return BUTTONDOWN
     }
 
@@ -722,12 +725,13 @@ namespace Intelino {
         idState(id, elements[i].state)
     }
 
-    //% block="attach %id to gate %gate line %position"
-    //% block.loc.nl="verbind %id met poort %gate lijn %position"
+    //% block="attach %id to %gate %position"
+    //% block.loc.nl="verbind %id met %gate %position"
     export function idConnect(id: Id, gate: Gate, position: Position) {
         let i = getId(id)
         elements[i].gate = gate
         elements[i].position = position
+        elements[i].state = State.Inactive
         setPixelOffset(gate)
     }
 
@@ -736,6 +740,15 @@ namespace Intelino {
     export function idType(id: Id, type: Type) {
         let i = getId(id)
         elements[i].type = type
+        switch (type) {
+            case Type.Speed: elements[i].state = State.Normal; break;
+            case Type.Wait: elements[i].state = State.Short; break;
+            case Type.SwitchLeft: elements[i].state = State.Bent; break;
+            case Type.SwitchRight: elements[i].state = State.Bent; break;
+            case Type.Uncouple: elements[i].state = State.Active; break;
+            case Type.Uturn: elements[i].state = State.Active; break;
+        }
         setPixelOffset(elements[i].gate)
+        idState(id, elements[i].state)
     }
 }
