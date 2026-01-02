@@ -722,19 +722,12 @@ namespace Intelino {
         idState(id, elements[i].state)
     }
 
-    //% block="attach %id to %gate %position"
-    //% block.loc.nl="verbind %id met %gate %position"
-    export function idConnect(id: Id, gate: Gate, position: Position) {
+    //% block="connect %id as a %type to %gate %position"
+    //% block.loc.nl="verbind %id als %type met %gate %position"
+    export function idType(id: Id, type: Type, gate: Gate, position: Position) {
         let i = getId(id)
         elements[i].gate = gate
         elements[i].position = position
-        setPixelOffset(gate)
-    }
-
-    //% block="make %id to be a %type"
-    //% block.loc.nl="maak van %id een %type"
-    export function idType(id: Id, type: Type) {
-        let i = getId(id)
         elements[i].type = type
         switch (type) {
             case Type.Speed: elements[i].state = State.Normal; break;
