@@ -181,6 +181,20 @@ namespace Ledstrip {
 ///////////////////////
 
 let elementHandler: prmhandler
+
+let key1Handler: handler
+let key2Handler: handler
+let key3Handler: handler
+let key4Handler: handler
+let key5Handler: handler
+let key6Handler: handler
+let key7Handler: handler
+let key8Handler: handler
+let key9Handler: handler
+let key10Handler: handler
+let key11Handler: handler
+let key12Handler: handler
+
 let ALTUP = false
 let ALTDOWN = false
 const BUTTONUP = 98
@@ -201,6 +215,20 @@ radio.onReceivedNumber(function (key: number) {
         }
     }
     if (elementHandler) elementHandler(key)
+    switch (key) {
+        case Intelino.Id.Id1: if (key1Handler) key1Handler(); break;
+        case Intelino.Id.Id2: if (key2Handler) key2Handler(); break;
+        case Intelino.Id.Id3: if (key3Handler) key3Handler(); break;
+        case Intelino.Id.Id4: if (key4Handler) key4Handler(); break;
+        case Intelino.Id.Id5: if (key5Handler) key5Handler(); break;
+        case Intelino.Id.Id6: if (key6Handler) key6Handler(); break;
+        case Intelino.Id.Id7: if (key7Handler) key7Handler(); break;
+        case Intelino.Id.Id8: if (key8Handler) key8Handler(); break;
+        case Intelino.Id.Id9: if (key9Handler) key9Handler(); break;
+        case Intelino.Id.Id10: if (key10Handler) key10Handler(); break;
+        case Intelino.Id.Id11: if (key11Handler) key11Handler(); break;
+        case Intelino.Id.Id12: if (key12Handler) key12Handler(); break;
+    }
 })
 
 //% color="#FFCC00" icon="\uf238"
@@ -512,6 +540,27 @@ namespace Intelino {
         elementHandler = code
     }
 
+    //% color="#FF8800"
+    //% subcategory="Directe bediening"
+    //% block="when receiving update of %id"
+    //% block.loc.nl="bij een update van %id"
+    export function onKey(id: Id, code: () => void): void {
+        switch( id) {
+            case Id.Id1: key1Handler = code; break;
+            case Id.Id2: key2Handler = code; break;
+            case Id.Id3: key3Handler = code; break;
+            case Id.Id4: key4Handler = code; break;
+            case Id.Id5: key5Handler = code; break;
+            case Id.Id6: key6Handler = code; break;
+            case Id.Id7: key7Handler = code; break;
+            case Id.Id8: key8Handler = code; break;
+            case Id.Id9: key9Handler = code; break;
+            case Id.Id10: key10Handler = code; break;
+            case Id.Id11: key11Handler = code; break;
+            case Id.Id12: key12Handler = code; break;
+        }
+    }
+
     //% block="together with the yellow upper button"
     //% block.loc.nl="samen met de bovenste gele knop"
     export function isAltUp(): boolean {
@@ -536,7 +585,7 @@ namespace Intelino {
         return BUTTONDOWN
     }
 
-    //% subcategory="Bediening"
+    //% subcategory="Directe bediening"
     //% block="set uturn %id to state %state"
     //% block.loc.nl="zet omkeren %id in stand %state"
     export function idUturn(id: Id, state: State) {
@@ -544,7 +593,7 @@ namespace Intelino {
         setUturn(elements[i].gate, elements[i].offset, elements[i].state)
     }
 
-    //% subcategory="Bediening"
+    //% subcategory="Directe bediening"
     //% block="set uncouple %id to state %state"
     //% block.loc.nl="zet loskoppelen %id in stand %state"
     export function idUncouple(id: Id, state: State) {
@@ -552,7 +601,7 @@ namespace Intelino {
         setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
     }
 
-    //% subcategory="Bediening"
+    //% subcategory="Directe bediening"
     //% block="set pause %id to state %state"
     //% block.loc.nl="zet pauzeer %id in stand %state"
     export function idWait(id: Id, state: State) {
@@ -560,7 +609,7 @@ namespace Intelino {
         setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
     }
 
-    //% subcategory="Bediening"
+    //% subcategory="Directe bediening"
     //% block="set speed %id to state %state"
     //% block.loc.nl="zet snelheid %id in stand %state"
     export function idSpeed(id: Id, state: State) {
@@ -568,7 +617,7 @@ namespace Intelino {
         setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
     }
 
-    //% subcategory="Bediening"
+    //% subcategory="Directe bediening"
     //% block="set switch %id to state %state"
     //% block.loc.nl="zet wissel %id in stand %state"
     export function idSwitch(id: Id, state: State) {
@@ -637,7 +686,7 @@ namespace Intelino {
 
     //% block="turn all codes in opposite direction"
     //% block.loc.nl="draai alle codes in omgekeerde richting"
-    function idInvertAll() {
+    export function idInvertAll() {
         for (let i = 0; i < elements.length; i++) {
             elements[i].reverse = !elements[i].reverse
             idState(elements[i].id, elements[i].state)
@@ -646,7 +695,7 @@ namespace Intelino {
 
     //% block="turn %id in opposite direction"
     //% block.loc.nl="draai %id in omgekeerde richting"
-    function idInvert(id: Id) {
+    export function idInvert(id: Id) {
         let i = getId(id)
         elements[i].reverse = !elements[i].reverse
         idState(id, elements[i].state)
