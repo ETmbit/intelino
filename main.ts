@@ -204,7 +204,6 @@ const BUTTONUP = 98
 const BUTTONDOWN = 99
 
 radio.onReceivedNumber(function (key: number) {
-basic.showNumber(key)
     ALTUP = false
     ALTDOWN = false
     if (key < 90) {
@@ -218,8 +217,6 @@ basic.showNumber(key)
             key -= 12
         }
     }
-if (ALTUP) basic.showArrow(ArrowNames.North)
-if (ALTDOWN) basic.showArrow(ArrowNames.South)
     if (elementHandler) elementHandler(key)
     switch (key) {
         case Intelino.Id.Id1: if (key1Handler) key1Handler(); break;
