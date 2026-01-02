@@ -195,6 +195,9 @@ let key10Handler: handler
 let key11Handler: handler
 let key12Handler: handler
 
+let buttonUpHandler: handler
+let buttonDownHandler: handler
+
 let ALTUP = false
 let ALTDOWN = false
 const BUTTONUP = 98
@@ -228,6 +231,8 @@ radio.onReceivedNumber(function (key: number) {
         case Intelino.Id.Id10: if (key10Handler) key10Handler(); break;
         case Intelino.Id.Id11: if (key11Handler) key11Handler(); break;
         case Intelino.Id.Id12: if (key12Handler) key12Handler(); break;
+        case BUTTONUP: if (buttonUpHandler) key11Handler(); break;
+        case BUTTONDOWN: if (buttonDownHandler) key12Handler(); break;
     }
 })
 
@@ -545,7 +550,7 @@ namespace Intelino {
     //% block="when receiving update of %id"
     //% block.loc.nl="bij een update van %id"
     export function onKey(id: Id, code: () => void): void {
-        switch( id) {
+        switch (id) {
             case Id.Id1: key1Handler = code; break;
             case Id.Id2: key2Handler = code; break;
             case Id.Id3: key3Handler = code; break;
@@ -559,6 +564,22 @@ namespace Intelino {
             case Id.Id11: key11Handler = code; break;
             case Id.Id12: key12Handler = code; break;
         }
+    }
+
+    //% color="#FF8800"
+    //% subcategory="Directe bediening"
+    //% block="when lower yellow key is pressed"
+    //% block.loc.nl="wanneer op de onderste gele knop gedrukt"
+    export function onButtonDown(code: () => void): void {
+        buttonDownHandler = code
+    }
+
+    //% color="#FF8800"
+    //% subcategory="Directe bediening"
+    //% block="when upper yellow key is pressed"
+    //% block.loc.nl="wanneer op de bovenste gele knop gedrukt"
+    export function onButtonUp(code: () => void): void {
+        buttonUpHandler = code
     }
 
     //% block="together with the yellow upper button"
