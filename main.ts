@@ -181,8 +181,25 @@ namespace Ledstrip {
 ///////////////////////
 
 let elementHandler: prmhandler
+let ALTUP = false
+let ALTDOWN = false
+const BUTTONUP = 98
+const BUTTONDOWN = 99
 
 radio.onReceivedNumber(function (key: number) {
+    ALTUP = false
+    ALTDOWN = false
+    if (key < 90) {
+        if (key > 24) {
+            ALTUP = true
+            key -= 24
+        }
+        else
+        if (key > 12) {
+            ALTDOWN = true
+            key -= 12
+        }
+    }
     if (elementHandler) elementHandler(key)
 })
 
@@ -495,6 +512,30 @@ namespace Intelino {
         elementHandler = code
     }
 
+    //% block="together with the yellow upper button"
+    //% block.loc.nl="samen met de bovenste gele knop"
+    export function isAltUp(): boolean {
+        return ALTUP
+    }
+
+    //% block="together with the yellow lower button"
+    //% block.loc.nl="samen met de onderste gele knop"
+    export function isAltDown(): boolean {
+        return ALTDOWN
+    }
+
+    //% block="the yellow upper button"
+    //% block.loc.nl="de bovenste gele knop"
+    export function isButtonUp(): number {
+        return BUTTONUP
+    }
+
+    //% block="the yellow lower button"
+    //% block.loc.nl="de onderste gele knop"
+    export function isButtonDown(): number {
+        return BUTTONDOWN
+    }
+
     //% subcategory="Bediening"
     //% block="set uturn %id to state %state"
     //% block.loc.nl="zet omkeren %id in stand %state"
@@ -540,7 +581,8 @@ namespace Intelino {
 
     //% block="set %id to state %state"
     //% block.loc.nl="zet %id in stand %state"
-    export function idState(id: Id, state: State) {
+    //% id.min=1 id.max=12 id.defl=1
+    export function idState(id: number, state: State) {
         let i = getId(id)
         elements[i].state = state
         switch (elements[i].type) {
@@ -565,9 +607,10 @@ namespace Intelino {
         }
     }
 
-    //% block="set %id to the next state"
-    //% block.loc.nl="zet %id in de volgende stand"
-    export function idNextState(id: Id) {
+    //% block="set %id to a next state"
+    //% block.loc.nl="zet %id in een volgende stand"
+    //% id.min=1 id.max=12 id.defl=1
+    export function idNextState(id: number) {
         let i = getId(id)
         elements[i].state = getNextState(elements[i].type, elements[i].state)
         switch (elements[i].type) {
@@ -609,8 +652,8 @@ namespace Intelino {
         idState(id, elements[i].state)
     }
 
-    //% block="attach %id to gate %gate, line %position"
-    //% block.loc.nl="verbind %id met poort %gate, lijn %position"
+    //% block="attach %id to gate %gate line %position"
+    //% block.loc.nl="verbind %id met poort %gate lijn %position"
     export function idConnect(id: Id, gate: Gate, position: Position) {
         let i = getId(id)
         elements[i].gate = gate
