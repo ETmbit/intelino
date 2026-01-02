@@ -724,7 +724,7 @@ namespace Intelino {
 
     //% block="connect %id as a %type to %gate %position"
     //% block.loc.nl="verbind %id als %type met %gate %position"
-    export function idType(id: Id, type: Type, gate: Gate, position: Position) {
+    export function idCreate(id: Id, type: Type, gate: Gate, position: Position) {
         let i = getId(id)
         elements[i].gate = gate
         elements[i].position = position
