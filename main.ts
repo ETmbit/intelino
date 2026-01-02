@@ -231,8 +231,8 @@ radio.onReceivedNumber(function (key: number) {
         case Intelino.Id.Id10: if (key10Handler) key10Handler(); break;
         case Intelino.Id.Id11: if (key11Handler) key11Handler(); break;
         case Intelino.Id.Id12: if (key12Handler) key12Handler(); break;
-        case BUTTONUP: if (buttonUpHandler) key11Handler(); break;
-        case BUTTONDOWN: if (buttonDownHandler) key12Handler(); break;
+        case BUTTONUP: if (buttonUpHandler) buttonUpHandler(); break;
+        case BUTTONDOWN: if (buttonDownHandler) buttonDownHandler(); break;
     }
 })
 
