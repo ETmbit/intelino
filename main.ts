@@ -529,14 +529,6 @@ namespace Intelino {
     }
 
     //% color="#FF8800"
-    //% block="when receiving update of"
-    //% block.loc.nl="bij een wijziging van"
-    //% draggableParameters="id"
-    export function onTrack(code: (id: number) => void): void {
-        trackHandler = code
-    }
-
-    //% color="#FF8800"
     //% block="when receiving an update of %id"
     //% block.loc.nl="bij een wijziging van %id"
     export function onTrackId(id: TrackId, code: () => void): void {
@@ -615,11 +607,9 @@ namespace Intelino {
         }
     }
 
-
     //% block="set number %id to a next state"
     //% block.loc.nl="zet nummer %id in een volgende stand"
-    //% id.min=1 id.max=12 id.defl=1
-    export function shiftState(id: number) {
+    export function shiftState(id: TrackId) {
         let i = getId(id)
         if (tracks[i].type == SwitchType.SwitchLeft || tracks[i].type == SwitchType.SwitchRight) {
             tracks[i].state = (tracks[i].state == SwitchState.Bent ? SwitchState.Straight : SwitchState.Bent)
@@ -664,6 +654,39 @@ namespace Intelino {
     export function setSwitchState(id: TrackId, state: SwitchState) {
         let i = getId(id)
         setSwitchColor(tracks[i])
+    }
+
+    //% subcategory="Met parameter"
+    //% block="set number %id to a next state"
+    //% block.loc.nl="zet nummer %id in een volgende stand"
+    //% id.min=1 id.max=12 id.defl=1
+    export function shiftStatePrm(id: number) {
+        shiftState(id)
+    }
+
+    //% subcategory="Met parameter"
+    //% block="set track %id to state %state"
+    //% block.loc.nl="zet baanvak %id in stand %state"
+    //% id.min=1 id.max=12 id.defl=1
+    export function setTrackStatePrm(id: TrackId, state: TrackState) {
+        setTrackState(id, state)
+    }
+
+    //% subcategory="Met parameter"
+    //% block="set switch %id to state %state"
+    //% block.loc.nl="zet wissel %id in stand %state"
+    //% id.min=1 id.max=12 id.defl=1
+    export function setSwitchStatePrm(id: TrackId, state: SwitchState) {
+        setSwitchState(id, state)
+    }
+
+    //% color="#FF8800"
+    //% subcategory="Met parameter"
+    //% block="when receiving update of"
+    //% block.loc.nl="bij een wijziging van"
+    //% draggableParameters="id"
+    export function onTrackPrm(code: (id: number) => void): void {
+        trackHandler = code
     }
     //% subcategory="Bij opstarten"
     //% block="connect %id as a %TrackType to %gate %position"
