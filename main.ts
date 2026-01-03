@@ -446,7 +446,6 @@ namespace Intelino {
             case TrackState.Uncouple:
             case TrackState.Uturn:
                 leds[track.gate].setPixelColor(pixel[0], color)
-
         }
         leds[track.gate].show()
     }
@@ -668,8 +667,8 @@ namespace Intelino {
                 setPixelOffset(tracks[i].gate)
                 tracks[i].state = state
             }
-            setTrackColor(tracks[i])
         }
+        setTrackColor(tracks[i])
     }
 
     //% block="set switch %id to state %state"
