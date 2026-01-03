@@ -617,7 +617,7 @@ namespace Intelino {
     }
 
     //% block="set track %id to a next track type"
-    //% block.loc.nl="zet baanvak %id in een volgend baanvak type"
+    //% block.loc.nl="zet baanvak %id in een volgend type"
     export function shiftType(id: TrackId) {
         let i = getId(id)
         tracks[i].type = nextTrackType(tracks[i].type)
@@ -687,9 +687,9 @@ namespace Intelino {
 
     //% subcategory="Met parameter"
     //% block="set track %id to a next track type"
-    //% block.loc.nl="zet baanvak %id in een volgend baanvak type"
+    //% block.loc.nl="zet baanvak %id om in een volgend type"
     //% id.min=1 id.max=12 id.defl=1
-    export function shiftTypePrm(id: TrackId) {
+    export function shiftTypePrm(id: number) {
         shiftType(id)
     }
 
