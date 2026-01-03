@@ -675,6 +675,7 @@ namespace Intelino {
     //% block.loc.nl="zet wissel %id in stand %state"
     export function setSwitchState(id: TrackId, state: SwitchState) {
         let i = getId(id)
+        tracks[i].state = state
         setSwitchColor(tracks[i])
     }
 
