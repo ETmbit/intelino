@@ -739,8 +739,8 @@ namespace Intelino {
     }
 
     //% subcategory="Bij opstarten"
-    //% block="connect %id as a %TrackType to %gate %position"
-    //% block.loc.nl="verbind %id als %TrackType met %gate %position"
+    //% block="connect %id as a %type to %gate %position"
+    //% block.loc.nl="verbind %id als %type met %gate %position"
     //% inlineInputMode=inline
     export function connectTrack(id: TrackId, type: TrackType, gate: Gate, position: Position) {
         let i = getId(id)
@@ -759,8 +759,8 @@ namespace Intelino {
     }
 
     //% subcategory="Bij opstarten"
-    //% block="connect %id as a %TrackType to %gate %position"
-    //% block.loc.nl="verbind %id als %TrackType met %gate %position"
+    //% block="connect %id as a switch %type to %gate %position"
+    //% block.loc.nl="verbind %id als wissel %type met %gate %position"
     //% inlineInputMode=inline
     export function connectSwitch(id: TrackId, type: SwitchType, gate: Gate, position: Position) {
         let i = getId(id)
