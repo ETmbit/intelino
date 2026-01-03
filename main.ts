@@ -412,37 +412,47 @@ namespace Intelino {
     }
 
     function setTrackColor(track: Track) {
-        let color: Color
-        let cnt = 0
-        switch (track.state) {
-            case TrackState.Slow: cnt += 1;
-            case TrackState.SNormal: cnt += 1;
-            case TrackState.Fast: cnt += 1;
-                color = Color.Green;
-                break;
-            case TrackState.Short: cnt += 1;
-            case TrackState.PNormal: cnt += 1;
-            case TrackState.Long: cnt += 1;
-                color = Color.Red;
-                break;
-            case TrackState.Uncouple: cnt += 1;
-                color = Color.Yellow;
-                break;
-            case TrackState.Uturn: cnt += 1;
-                color = Color.Blue;
-                break;
+        leds[track.gate].setPixelColor(track.offset, Color.Black)
+        leds[track.gate].setPixelColor(track.offset + 1, Color.Black)
+        leds[track.gate].setPixelColor(track.offset + 2, Color.Black)
+
+        if (track.state == TrackState.Inactive) {
+            leds[track.gate].show()
+            return
         }
-        let pixel = track.offset
-        if (track.reverse) pixel += 2
-        for (let i = 0; i < 3; i++) {
-            leds[track.gate].setPixelColor(track.reverse ? pixel - i : pixel,
-                                           i < cnt ? color : Color.Black)
+
+        let color: Color
+        switch (track.type) {
+            case TrackType.Speed: color = Color.Green; break;
+            case TrackType.Pause: color = Color.Red; break;
+            case TrackType.Uncouple: color = Color.Yellow; break;
+            case TrackType.Uturn: color = Color.Blue; break;
+            default: color = Color.Black;
+        }
+
+        let pixel: number[] = (track.reverse ?
+            [track.offset + 2, track.offset + 1, track.offset] :
+            [track.offset, track.offset + 1, track.offset + 2])
+
+        switch (track.state) {
+            case TrackState.Fast:
+            case TrackState.Long:
+                leds[track.gate].setPixelColor(pixel[2], color)
+            case TrackState.SNormal:
+            case TrackState.PNormal:
+                leds[track.gate].setPixelColor(pixel[1], color)
+            case TrackState.Slow:
+            case TrackState.Short:
+            case TrackState.Uncouple:
+            case TrackState.Uturn:
+                leds[track.gate].setPixelColor(pixel[0], color)
+
         }
         leds[track.gate].show()
     }
 
     function setPixelOffset(gate: Gate) {
-        let typcnt = [3, 3, 1, 1, 1, 1] // number of pixels per TrackType
+        let typcnt = [1, 1, 3, 3, 1, 1] // number of pixels per SwitchType/TrackType
         let offset = 0
         for (let i = 0; i < tracks.length; i++) {
             if (tracks[i].gate == gate && tracks[i].position == Position.Position1) {
