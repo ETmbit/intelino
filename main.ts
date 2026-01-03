@@ -617,6 +617,15 @@ namespace Intelino {
         }
     }
 
+    //% block="set track %id to a next track type"
+    //% block.loc.nl="zet baanvak %id in een volgend baanvak type"
+    export function shiftType(id: TrackId) {
+        let i = getId(id)
+        tracks[i].type = nextTrackType(tracks[i].type)
+        setPixelOffset(tracks[i].gate)
+        setTrackColor(tracks[i])
+    }
+
     //% block="set number %id to a next state"
     //% block.loc.nl="zet nummer %id in een volgende stand"
     export function shiftState(id: TrackId) {
@@ -668,6 +677,14 @@ namespace Intelino {
     export function setSwitchState(id: TrackId, state: SwitchState) {
         let i = getId(id)
         setSwitchColor(tracks[i])
+    }
+
+    //% subcategory="Met parameter"
+    //% block="set track %id to a next track type"
+    //% block.loc.nl="zet baanvak %id in een volgend baanvak type"
+    //% id.min=1 id.max=12 id.defl=1
+    export function shiftTypePrm(id: TrackId) {
+        shiftType(id)
     }
 
     //% subcategory="Met parameter"
