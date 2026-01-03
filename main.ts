@@ -650,13 +650,17 @@ namespace Intelino {
     //% block.loc.nl="zet baanvak %id in stand %state"
     export function setTrackState(id: TrackId, state: TrackState) {
         let i = getId(id)
-        let type = trackType(state)
-        if (type != tracks[i].type) {
-            tracks[i].type = type
-            setPixelOffset(tracks[i].gate)
+        if (state == TrackState.Inactive)
             tracks[i].state = state
+        else {
+            let type = trackType(state)
+            if (type != tracks[i].type) {
+                tracks[i].type = type
+                setPixelOffset(tracks[i].gate)
+                tracks[i].state = state
+            }
+            setTrackColor(tracks[i])
         }
-        setTrackColor(tracks[i])
     }
 
     //% block="set switch %id to state %state"
