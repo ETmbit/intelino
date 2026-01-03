@@ -643,10 +643,10 @@ namespace Intelino {
                     if (state > TrackState.Long) state = TrackState.Short;
                     break;
                 case TrackType.Uncouple:
-                    state = (state == TrackState.Uncouple ? TrackState.Inactive : TrackState.Uncouple)
+                    state = (state > TrackState.Uncouple ? TrackState.Inactive : TrackState.Uncouple)
                     break;
                 case TrackType.Uturn:
-                    state = (state == TrackState.Uturn ? TrackState.Inactive : TrackState.Uturn)
+                    state = (state > TrackState.Uturn ? TrackState.Inactive : TrackState.Uturn)
                     break;
             }
             tracks[i].state = state
