@@ -558,27 +558,27 @@ namespace Intelino {
     }
 
     //% color="#FF8800"
-    //% block="when lower yellow track is pressed"
-    //% block.loc.nl="wanneer op de onderste gele knop gedrukt"
+    //% block="when the lower button is pressed"
+    //% block.loc.nl="wanneer op de onderste knop wordt gedrukt"
     export function onButtonDown(code: () => void): void {
         buttonDownHandler = code
     }
 
     //% color="#FF8800"
-    //% block="when upper yellow track is pressed"
-    //% block.loc.nl="wanneer op de bovenste gele knop gedrukt"
+    //% block="when the upper button is pressed"
+    //% block.loc.nl="wanneer op de bovenste knop wordt gedrukt"
     export function onButtonUp(code: () => void): void {
         buttonUpHandler = code
     }
 
-    //% block="together with the lower button"
-    //% block.loc.nl="samen met de onderste knop"
+    //% block="pressed together with the lower button"
+    //% block.loc.nl="samen met de onderste knop ingedrukt"
     export function isAltDown(): boolean {
         return ALTDOWN
     }
 
-    //% block="together with the upper button"
-    //% block.loc.nl="samen met de bovenste"
+    //% block="pressed together with the upper button"
+    //% block.loc.nl="samen met de bovenste knop ingedrukt"
     export function isAltUp(): boolean {
         return ALTUP
     }
@@ -620,15 +620,17 @@ namespace Intelino {
     //% block.loc.nl="zet baanvak %id in een volgend type"
     export function shiftType(id: TrackId) {
         let i = getId(id)
-        tracks[i].type = nextTrackType(tracks[i].type)
-        setPixelOffset(tracks[i].gate)
-        switch (tracks[i].type) {
-            case TrackType.Speed: tracks[i].state = TrackState.SNormal; break;
-            case TrackType.Pause: tracks[i].state = TrackState.PNormal; break;
-            case TrackType.Uncouple: tracks[i].state = TrackState.Uncouple; break;
-            case TrackType.Uturn: tracks[i].state = TrackState.Uturn; break;
+        if (tracks[i].type != SwitchType.SwitchLeft && tracks[i].type != SwitchType.SwitchRight) {
+            tracks[i].type = nextTrackType(tracks[i].type)
+            setPixelOffset(tracks[i].gate)
+            switch (tracks[i].type) {
+                case TrackType.Speed: tracks[i].state = TrackState.SNormal; break;
+                case TrackType.Pause: tracks[i].state = TrackState.PNormal; break;
+                case TrackType.Uncouple: tracks[i].state = TrackState.Uncouple; break;
+                case TrackType.Uturn: tracks[i].state = TrackState.Uturn; break;
+            }
+            setTrackColor(tracks[i])
         }
-        setTrackColor(tracks[i])
     }
 
     //% block="set number %id to a next state"
