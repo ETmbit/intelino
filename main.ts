@@ -203,6 +203,36 @@ let ALTDOWN = false
 const BUTTONUP = 98
 const BUTTONDOWN = 99
 
+enum Gate {
+    //% block="A"
+    //% block.loc.nl="A"
+    Gate1,
+    //% block="B"
+    //% block.loc.nl="B"
+    Gate2,
+    //% block="C"
+    //% block.loc.nl="C"
+    Gate3,
+    //% block="D"
+    //% block.loc.nl="D"
+    Gate4,
+    //% block="E"
+    //% block.loc.nl="E"
+    Gate5,
+    //% block="F"
+    //% block.loc.nl="F"
+    Gate6,
+}
+
+enum Position {
+    //% block="I"
+    //% block.loc.nl="I"
+    Position1,
+    //% block="II"
+    //% block.loc.nl="II"
+    Position2,
+}
+
 enum TrackId {
     //% block="1"
     //% block.loc.nl="1"
@@ -243,11 +273,11 @@ enum TrackId {
 }
 
 enum SwitchType {
-    //% block="switch to the left"
-    //% block.loc.nl="wissel naar links"
+    //% block="to the left"
+    //% block.loc.nl="naar links"
     SwitchLeft = 0,
-    //% block="switch to the right"
-    //% block.loc.nl="wissel naar rechts"
+    //% block="to the right"
+    //% block.loc.nl="naar rechts"
     SwitchRight = 1,
 }
 
@@ -354,36 +384,6 @@ namespace Intelino {
     leds.push(Ledstrip.create(DigitalPin.P13, 6))
     leds.push(Ledstrip.create(DigitalPin.P14, 6))
     leds.push(Ledstrip.create(DigitalPin.P15, 6))
-
-    export enum Gate {
-        //% block="A"
-        //% block.loc.nl="A"
-        Gate1,
-        //% block="B"
-        //% block.loc.nl="B"
-        Gate2,
-        //% block="C"
-        //% block.loc.nl="C"
-        Gate3,
-        //% block="D"
-        //% block.loc.nl="D"
-        Gate4,
-        //% block="E"
-        //% block.loc.nl="E"
-        Gate5,
-        //% block="F"
-        //% block.loc.nl="F"
-        Gate6,
-    }
-
-    export enum Position {
-        //% block="I"
-        //% block.loc.nl="I"
-        Position1,
-        //% block="II"
-        //% block.loc.nl="II"
-        Position2,
-    }
 
     interface Track {
         id: number
@@ -562,28 +562,28 @@ namespace Intelino {
         buttonUpHandler = code
     }
 
-    //% block="together with the upper button"
-    //% block.loc.nl="samen met de bovenste"
-    export function isAltUp(): boolean {
-        return ALTUP
-    }
-
     //% block="together with the lower button"
     //% block.loc.nl="samen met de onderste knop"
     export function isAltDown(): boolean {
         return ALTDOWN
     }
 
-    //% block="the upper button"
-    //% block.loc.nl="de bovenste knop"
-    export function buttonUp(): number {
-        return BUTTONUP
+    //% block="together with the upper button"
+    //% block.loc.nl="samen met de bovenste"
+    export function isAltUp(): boolean {
+        return ALTUP
     }
 
     //% block="the lower button"
     //% block.loc.nl="de onderste knop"
     export function buttonDown(): number {
         return BUTTONDOWN
+    }
+
+    //% block="the upper button"
+    //% block.loc.nl="de bovenste knop"
+    export function buttonUp(): number {
+        return BUTTONUP
     }
 
     //% block="set all tracks in opposite direction"
@@ -668,7 +668,9 @@ namespace Intelino {
     //% block="set track %id to state %state"
     //% block.loc.nl="zet baanvak %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
-    export function setTrackStatePrm(id: TrackId, state: TrackState) {
+    export function setStatePrm(id: number, state: TrackState) {
+        let i =getId(id)
+
         setTrackState(id, state)
     }
 
@@ -676,8 +678,18 @@ namespace Intelino {
     //% block="set switch %id to state %state"
     //% block.loc.nl="zet wissel %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
-    export function setSwitchStatePrm(id: TrackId, state: SwitchState) {
+    export function setSwitchStatePrm(id: number, state: SwitchState) {
         setSwitchState(id, state)
+    }
+
+    //% subcategory="Met parameter"
+    //% block="number %id is a switch"
+    //% block.loc.nl="nummer %id is een wissel"
+    //% id.min=1 id.max=12 id.defl=1
+    export function isSwitchPrm(id: number) {
+        let i = getId(id)
+        return (tracks[i].type == SwitchType.SwitchLeft ||
+            tracks[i].type == SwitchType.SwitchRight)
     }
 
     //% color="#FF8800"
@@ -688,6 +700,7 @@ namespace Intelino {
     export function onTrackPrm(code: (id: number) => void): void {
         trackHandler = code
     }
+
     //% subcategory="Bij opstarten"
     //% block="connect %id as a %TrackType to %gate %position"
     //% block.loc.nl="verbind %id als %TrackType met %gate %position"
@@ -718,10 +731,7 @@ namespace Intelino {
         tracks[i].position = position
         tracks[i].type = type
         tracks[i].reverse = false
-        switch (type) {
-            case SwitchType.SwitchLeft: tracks[i].state = SwitchState.Bent; break;
-            case SwitchType.SwitchRight: tracks[i].state = SwitchState.Bent; break;
-        }
+        tracks[i].state = SwitchState.Bent
         setPixelOffset(tracks[i].gate)
         setSwitchColor(tracks[i])
     }
