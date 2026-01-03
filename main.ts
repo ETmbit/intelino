@@ -657,6 +657,14 @@ namespace Intelino {
     }
 
     //% subcategory="Met parameter"
+    //% block="set track %id in opposite direction"
+    //% block.loc.nl="zet baanvak %id in omgekeerde richting"
+    //% id.min=1 id.max=12 id.defl=1
+    export function invertTrackPrm(id: number) {
+        invertTrack(id)
+    }
+
+    //% subcategory="Met parameter"
     //% block="set number %id to a next state"
     //% block.loc.nl="zet nummer %id in een volgende stand"
     //% id.min=1 id.max=12 id.defl=1
@@ -668,9 +676,7 @@ namespace Intelino {
     //% block="set track %id to state %state"
     //% block.loc.nl="zet baanvak %id in stand %state"
     //% id.min=1 id.max=12 id.defl=1
-    export function setStatePrm(id: number, state: TrackState) {
-        let i =getId(id)
-
+    export function setTrackStatePrm(id: number, state: TrackState) {
         setTrackState(id, state)
     }
 
