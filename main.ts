@@ -622,6 +622,12 @@ namespace Intelino {
         let i = getId(id)
         tracks[i].type = nextTrackType(tracks[i].type)
         setPixelOffset(tracks[i].gate)
+        switch (tracks[i].type) {
+            case TrackType.Speed: tracks[i].state = TrackState.SNormal; break;
+            case TrackType.Pause: tracks[i].state = TrackState.PNormal; break;
+            case TrackType.Uncouple: tracks[i].state = TrackState.Uncouple; break;
+            case TrackType.Uturn: tracks[i].state = TrackState.Uturn; break;
+        }
         setTrackColor(tracks[i])
     }
 
