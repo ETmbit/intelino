@@ -180,20 +180,20 @@ namespace Ledstrip {
 //###################//
 ///////////////////////
 
-let elementHandler: prmhandler
+let trackHandler: prmhandler
 
-let key1Handler: handler
-let key2Handler: handler
-let key3Handler: handler
-let key4Handler: handler
-let key5Handler: handler
-let key6Handler: handler
-let key7Handler: handler
-let key8Handler: handler
-let key9Handler: handler
-let key10Handler: handler
-let key11Handler: handler
-let key12Handler: handler
+let track1Handler: handler
+let track2Handler: handler
+let track3Handler: handler
+let track4Handler: handler
+let track5Handler: handler
+let track6Handler: handler
+let track7Handler: handler
+let track8Handler: handler
+let track9Handler: handler
+let track10Handler: handler
+let track11Handler: handler
+let track12Handler: handler
 
 let buttonUpHandler: handler
 let buttonDownHandler: handler
@@ -203,34 +203,139 @@ let ALTDOWN = false
 const BUTTONUP = 98
 const BUTTONDOWN = 99
 
-radio.onReceivedNumber(function (key: number) {
+enum TrackId {
+    //% block="1"
+    //% block.loc.nl="1"
+    Id1 = 1,
+    //% block="2"
+    //% block.loc.nl="2"
+    Id2 = 2,
+    //% block="3"
+    //% block.loc.nl="3"
+    Id3 = 3,
+    //% block="4"
+    //% block.loc.nl="4"
+    Id4 = 4,
+    //% block="5"
+    //% block.loc.nl="5"
+    Id5 = 5,
+    //% block="6"
+    //% block.loc.nl="6"
+    Id6 = 6,
+    //% block="7"
+    //% block.loc.nl="7"
+    Id7 = 7,
+    //% block="8"
+    //% block.loc.nl="8"
+    Id8 = 8,
+    //% block="9"
+    //% block.loc.nl="9"
+    Id9 = 9,
+    //% block="10"
+    //% block.loc.nl="10"
+    Id10 = 10,
+    //% block="11"
+    //% block.loc.nl="11"
+    Id11 = 11,
+    //% block="12"
+    //% block.loc.nl="12"
+    Id12 = 12,
+}
+
+enum SwitchType {
+    //% block="switch to the left"
+    //% block.loc.nl="wissel naar links"
+    SwitchLeft = 0,
+    //% block="switch to the right"
+    //% block.loc.nl="wissel naar rechts"
+    SwitchRight = 1,
+}
+
+enum TrackType {
+    //% block="speed"
+    //% block.loc.nl="snelheid"
+    Speed = 2,
+    //% block="stopping place"
+    //% block.loc.nl="halte"
+    Pause = 3,
+    //% block="uncoupler"
+    //% block.loc.nl="ontkoppelaar"
+    Uncouple = 4,
+    //% block="uturn"
+    //% block.loc.nl="omkering"
+    Uturn = 5,
+}
+
+enum SwitchState {
+    //% block="off"
+    //% block.loc.nl="uit"
+    Inactive = 0,
+    //% block="straight ahead"
+    //% block.loc.nl="rechtdoor"
+    Straight = 1,
+    //% block="bent"
+    //% block.loc.nl="afslaan"
+    Bent = 2,
+}
+
+enum TrackState {
+    //% block="off"
+    //% block.loc.nl="uit"
+    Inactive = 0,
+    //% block="slow"
+    //% block.loc.nl="langzaam"
+    Slow = 1,
+    //% block="normal speed"
+    //% block.loc.nl="normale snelheid"
+    SNormal = 2,
+    //% block="fast"
+    //% block.loc.nl="snel"
+    Fast = 3,
+    //% block="short pause"
+    //% block.loc.nl="korte pauze"
+    Short = 4,
+    //% block="normal pause"
+    //% block.loc.nl="normale pauze"
+    PNormal = 5,
+    //% block="long pause"
+    //% block.loc.nl="lange pauze"
+    Long = 6,
+    //% block="uncouple"
+    //% block.loc.nl="ontkoppelen"
+    Uncouple = 7,
+    //% block="uturn"
+    //% block.loc.nl="omkeren"
+    Uturn = 8,
+}
+
+radio.onReceivedNumber(function (track: number) {
     ALTUP = false
     ALTDOWN = false
-    if (key < 90) {
-        if (key > 24) {
+    if (track < 90) {
+        if (track > 24) {
             ALTDOWN = true
-            key -= 24
+            track -= 24
         }
         else
-        if (key > 12) {
+        if (track > 12) {
             ALTUP = true
-            key -= 12
+            track -= 12
         }
     }
-    if (elementHandler) elementHandler(key)
-    switch (key) {
-        case Intelino.Id.Id1: if (key1Handler) key1Handler(); break;
-        case Intelino.Id.Id2: if (key2Handler) key2Handler(); break;
-        case Intelino.Id.Id3: if (key3Handler) key3Handler(); break;
-        case Intelino.Id.Id4: if (key4Handler) key4Handler(); break;
-        case Intelino.Id.Id5: if (key5Handler) key5Handler(); break;
-        case Intelino.Id.Id6: if (key6Handler) key6Handler(); break;
-        case Intelino.Id.Id7: if (key7Handler) key7Handler(); break;
-        case Intelino.Id.Id8: if (key8Handler) key8Handler(); break;
-        case Intelino.Id.Id9: if (key9Handler) key9Handler(); break;
-        case Intelino.Id.Id10: if (key10Handler) key10Handler(); break;
-        case Intelino.Id.Id11: if (key11Handler) key11Handler(); break;
-        case Intelino.Id.Id12: if (key12Handler) key12Handler(); break;
+    if (trackHandler) trackHandler(track)
+    switch (track) {
+        case TrackId.Id1: if (track1Handler) track1Handler(); break;
+        case TrackId.Id2: if (track2Handler) track2Handler(); break;
+        case TrackId.Id3: if (track3Handler) track3Handler(); break;
+        case TrackId.Id4: if (track4Handler) track4Handler(); break;
+        case TrackId.Id5: if (track5Handler) track5Handler(); break;
+        case TrackId.Id6: if (track6Handler) track6Handler(); break;
+        case TrackId.Id7: if (track7Handler) track7Handler(); break;
+        case TrackId.Id8: if (track8Handler) track8Handler(); break;
+        case TrackId.Id9: if (track9Handler) track9Handler(); break;
+        case TrackId.Id10: if (track10Handler) track10Handler(); break;
+        case TrackId.Id11: if (track11Handler) track11Handler(); break;
+        case TrackId.Id12: if (track12Handler) track12Handler(); break;
         case BUTTONUP: if (buttonUpHandler) buttonUpHandler(); break;
         case BUTTONDOWN: if (buttonDownHandler) buttonDownHandler(); break;
     }
@@ -249,45 +354,6 @@ namespace Intelino {
     leds.push(Ledstrip.create(DigitalPin.P13, 6))
     leds.push(Ledstrip.create(DigitalPin.P14, 6))
     leds.push(Ledstrip.create(DigitalPin.P15, 6))
-
-    export enum Id {
-        //% block="1"
-        //% block.loc.nl="1"
-        Id1 = 1,
-        //% block="2"
-        //% block.loc.nl="2"
-        Id2 = 2,
-        //% block="3"
-        //% block.loc.nl="3"
-        Id3 = 3,
-        //% block="4"
-        //% block.loc.nl="4"
-        Id4 = 4,
-        //% block="5"
-        //% block.loc.nl="5"
-        Id5 = 5,
-        //% block="6"
-        //% block.loc.nl="6"
-        Id6 = 6,
-        //% block="7"
-        //% block.loc.nl="7"
-        Id7 = 7,
-        //% block="8"
-        //% block.loc.nl="8"
-        Id8 = 8,
-        //% block="9"
-        //% block.loc.nl="9"
-        Id9 = 9,
-        //% block="10"
-        //% block.loc.nl="10"
-        Id10 = 10,
-        //% block="11"
-        //% block.loc.nl="11"
-        Id11 = 11,
-        //% block="12"
-        //% block.loc.nl="12"
-        Id12 = 12,
-    }
 
     export enum Gate {
         //% block="A"
@@ -319,426 +385,321 @@ namespace Intelino {
         Position2,
     }
 
-    export enum Type {
-        //% block="speed control"
-        //% block.loc.nl="snelheidsregelaar"
-        Speed,
-        //% block="stopping place"
-        //% block.loc.nl="halte"
-        Wait,
-        //% block="switch to the left"
-        //% block.loc.nl="wissel naar links"
-        SwitchLeft,
-        //% block="switch to the right"
-        //% block.loc.nl="wissel naar rechts"
-        SwitchRight,
-        //% block="uncoupler"
-        //% block.loc.nl="ontkoppelaar"
-        Uncouple,
-        //% block="uturn"
-        //% block.loc.nl="omkering"
-        Uturn,
-    }
-
-    export enum State {
-        //% block="off"
-        //% block.loc.nl="uit"
-        Inactive = 0,
-        //% block="on"
-        //% block.loc.nl="aan"
-        Active = 1,
-        //% block="normal"
-        //% block.loc.nl="normaal"
-        Normal = 2,
-        //% block="slow"
-        //% block.loc.nl="langzaam"
-        Slow = 1,
-        //% block="fast"
-        //% block.loc.nl="snel"
-        Fast = 3,
-        //% block="short"
-        //% block.loc.nl="kort"
-        Short = 1,
-        //% block="long"
-        //% block.loc.nl="lang"
-        Long = 3,
-        //% block="bent"
-        //% block.loc.nl="afslaan"
-        Bent = 1,
-        //% block="straight ahead"
-        //% block.loc.nl="rechtdoor"
-        Straight = 2,
-    }
-
-    interface Element {
+    interface Track {
         id: number
-        type: Type
-        state: State
-        gate: Gate
-        position: Position
+        type: number
+        state: number
+        gate: number
+        position: number
         offset: number
         reverse: boolean
     }
-    let elements: Element[] = []
+    let tracks: Track[] = []
+
+    function setSwitchColor(track: Track) {
+        switch (track.state) {
+            case SwitchState.Bent:
+                leds[track.gate].setPixelColor(track.offset,
+                    track.type == SwitchType.SwitchLeft? Color.Red : Color.Blue)
+                break
+            case SwitchState.Straight:
+                leds[track.gate].setPixelColor(track.offset, Color.Green)
+                break
+            default:
+                leds[track.gate].setPixelColor(track.offset, Color.Black)
+        }
+        leds[track.gate].show()
+    }
+
+    function setTrackColor(track: Track) {
+        let color: Color
+        let cnt = 0
+        switch (track.state) {
+            case TrackState.Slow: cnt += 1;
+            case TrackState.SNormal: cnt += 1;
+            case TrackState.Fast: cnt += 1;
+                color = Color.Green;
+                break;
+            case TrackState.Short: cnt += 1;
+            case TrackState.PNormal: cnt += 1;
+            case TrackState.Long: cnt += 1;
+                color = Color.Red;
+                break;
+            case TrackState.Uncouple: cnt += 1;
+                color = Color.Yellow;
+                break;
+            case TrackState.Uturn: cnt += 1;
+                color = Color.Blue;
+                break;
+        }
+        let pixel = track.offset
+        if (track.reverse) pixel += 2
+        for (let i = 0; i < 3; i++) {
+            leds[track.gate].setPixelColor(track.reverse ? pixel - i : pixel,
+                                           i < cnt ? color : Color.Black)
+        }
+        leds[track.gate].show()
+    }
 
     function setPixelOffset(gate: Gate) {
-        let typcnt = [3, 3, 1, 1, 1, 1] // number of pixels per element type
+        let typcnt = [3, 3, 1, 1, 1, 1] // number of pixels per TrackType
         let offset = 0
-        for (let i = 0; i < elements.length; i++) {
-            if (elements[i].gate == gate && elements[i].position == Position.Position1) {
-                offset = typcnt[elements[i].type]
+        for (let i = 0; i < tracks.length; i++) {
+            if (tracks[i].gate == gate && tracks[i].position == Position.Position1) {
+                offset = typcnt[tracks[i].type]
                 break
             }
         }
-        for (let i = 0; i < elements.length; i++) {
-            if (elements[i].gate == gate && elements[i].position == Position.Position2) {
-                elements[i].offset = offset
+        for (let i = 0; i < tracks.length; i++) {
+            if (tracks[i].gate == gate && tracks[i].position == Position.Position2) {
+                tracks[i].offset = offset
                 break
             }
         }
-    }
-
-    function setSpeed(gate: Gate, pixel: number, state: State, reverse: boolean) {
-        leds[gate].setPixelColor(pixel, Color.Black)
-        leds[gate].setPixelColor(pixel + 1, Color.Black)
-        leds[gate].setPixelColor(pixel + 2, Color.Black)
-        if (reverse) {
-            switch (state) {
-                // no individual break after the next cases
-                case State.Fast: leds[gate].setPixelColor(pixel, Color.Green)
-                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Green)
-                case State.Slow: leds[gate].setPixelColor(pixel + 2, Color.Green)
-                    break
-            }
-        }
-        else {
-            switch (state) {
-                // no individual break after the next cases
-                case State.Fast: leds[gate].setPixelColor(pixel + 2, Color.Green)
-                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Green)
-                case State.Slow: leds[gate].setPixelColor(pixel, Color.Green)
-                    break
+        for (let i = 0; i < tracks.length; i++) {
+            if (tracks[i].gate == gate) {
+                if (tracks[i].type == SwitchType.SwitchLeft ||
+                                            tracks[i].type == SwitchType.SwitchRight)
+                    setSwitchColor(tracks[i])
+                else
+                    setTrackColor(tracks[i])
             }
         }
         leds[gate].show()
-    }
-
-    function setWait(gate: Gate, pixel: number, state: State, reverse: boolean) {
-        leds[gate].setPixelColor(pixel, Color.Black)
-        leds[gate].setPixelColor(pixel + 1, Color.Black)
-        leds[gate].setPixelColor(pixel + 2, Color.Black)
-        if (reverse) {
-            switch (state) {
-                // no individual break after the next cases
-                case State.Long: leds[gate].setPixelColor(pixel, Color.Red)
-                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Red)
-                case State.Short: leds[gate].setPixelColor(pixel + 2, Color.Red)
-                    break
-            }
-        }
-        else {
-            switch (state) {
-                // no individual break after the next cases
-                case State.Long: leds[gate].setPixelColor(pixel + 2, Color.Red)
-                case State.Normal: leds[gate].setPixelColor(pixel + 1, Color.Red)
-                case State.Short: leds[gate].setPixelColor(pixel, Color.Red)
-                    break
-            }
-        }
-        leds[gate].show()
-    }
-
-    function setSwitchLeft(gate: Gate, pixel: number, state: State) {
-        switch (state) {
-            case State.Inactive:
-                leds[gate].setPixelColor(pixel, Color.Black)
-                break
-            case State.Bent:
-                leds[gate].setPixelColor(pixel, Color.Red)
-                break
-            case State.Straight:
-                leds[gate].setPixelColor(pixel, Color.Green)
-                break
-        }
-        leds[gate].show()
-    }
-
-    function setSwitchRight(gate: Gate, pixel: number, state: State) {
-        switch (state) {
-            case State.Inactive:
-                leds[gate].setPixelColor(pixel, Color.Black)
-                break
-            case State.Bent:
-                leds[gate].setPixelColor(pixel, Color.Blue)
-                break
-            case State.Straight:
-                leds[gate].setPixelColor(pixel, Color.Green)
-                break
-        }
-        leds[gate].show()
-
-    }
-
-    function setUncouple(gate: Gate, pixel: number, state: State) {
-        switch (state) {
-            case State.Inactive:
-                leds[gate].setPixelColor(pixel, Color.Black)
-                break
-            case State.Active:
-                leds[gate].setPixelColor(pixel, Color.Yellow)
-                break
-        }
-        leds[gate].show()
-    }
-
-    function setUturn(gate: Gate, pixel: number, state: State) {
-        switch (state) {
-            case State.Inactive:
-                leds[gate].setPixelColor(pixel, Color.Black)
-                break
-            case State.Active:
-                leds[gate].setPixelColor(pixel, Color.Blue)
-                break
-        }
-        leds[gate].show()
-    }
-
-    function getNextState(type: Type, state: State): State {
-        state += 1
-        switch (type) {
-            case Type.Speed: if (state < State.Slow || state > State.Fast)
-                state = State.Slow
-                break
-            case Type.Wait: if (state < State.Short || state > State.Long)
-                state = State.Short
-                break
-            case Type.SwitchLeft:
-            case Type.SwitchRight: if (state < State.Bent || state > State.Straight)
-                state = State.Bent
-                break
-            case Type.Uncouple:
-            case Type.Uturn: if (state < State.Inactive || state > State.Active)
-                state = State.Inactive
-                break
-            default: state = State.Inactive
-        }
-        return state
     }
 
     function getId(id: number): number {
         let i: number
-        for (i = 0; i < elements.length; i++)
-            if (elements[i].id == id) break
-        if (i == elements.length)
-            elements.push({
-                id: id, type: Type.Speed, state: State.Inactive, gate: Gate.Gate1,
-                position: Position.Position1, offset: 0, reverse: false
-            })
+        for (i = 0; i < tracks.length; i++)
+            if (tracks[i].id == id) break
+        if (i == tracks.length)
+            tracks.push({ id: id, type: 0, state: 0, gate: 0, position: 0, offset: 0, reverse: false })
         return i
+    }
+
+    function trackType(state: TrackState): TrackType {
+        switch (state) {
+            case TrackState.Slow:
+            case TrackState.SNormal:
+            case TrackState.Fast: return TrackType.Speed
+            case TrackState.Short:
+            case TrackState.PNormal:
+            case TrackState.Long: return TrackType.Pause
+            case TrackState.Uncouple: return TrackType.Uncouple
+            case TrackState.Uturn: return TrackType.Uturn
+        }
+        return TrackType.Speed
+    }
+
+    function nextTrackType(type: TrackType): TrackType {
+        type += 1
+        if (type > TrackType.Uturn) type = TrackType.Speed
+        return type
+    }
+
+    function nextTrackState(type: TrackType, state: TrackState): TrackState {
+        let test: TrackState
+        if (state) {
+            state += 1
+            switch (type) {
+                case TrackType.Speed: test = TrackState.Fast; break;
+                case TrackType.Pause: test = TrackState.Long; break;
+                case TrackType.Uncouple: test = TrackState.Uncouple; break;
+                case TrackType.Uturn: test = TrackState.Uturn; break;
+                default: state = 0
+            }
+            if (state > test) state = 0
+        }
+        else {
+            switch (type) {
+                case TrackType.Speed: state = TrackState.Slow; break;
+                case TrackType.Pause: state = TrackState.Short; break;
+                case TrackType.Uncouple: state = TrackState.Uncouple; break;
+                case TrackType.Uturn: state = TrackState.Uturn; break;
+                default: state = 0
+            }
+        }
+        return state
+    }
+
+    function nextState(state: TrackState): TrackState {
+        state += 1
+        if (state > TrackState.Uturn) state = TrackState.Inactive
+        return state
     }
 
     //% color="#FF8800"
     //% block="when receiving update of"
-    //% block.loc.nl="bij een update van"
+    //% block.loc.nl="bij een wijziging van"
     //% draggableParameters="id"
-    export function onElement(code: (id: number) => void): void {
-        elementHandler = code
+    export function onTrack(code: (id: number) => void): void {
+        trackHandler = code
     }
 
     //% color="#FF8800"
-    //% subcategory="Directe bediening"
-    //% block="when receiving update of %id"
-    //% block.loc.nl="bij een update van %id"
-    export function onKey(id: Id, code: () => void): void {
+    //% block="when receiving an update of %id"
+    //% block.loc.nl="bij een wijziging van %id"
+    export function onTrackId(id: TrackId, code: () => void): void {
         switch (id) {
-            case Id.Id1: key1Handler = code; break;
-            case Id.Id2: key2Handler = code; break;
-            case Id.Id3: key3Handler = code; break;
-            case Id.Id4: key4Handler = code; break;
-            case Id.Id5: key5Handler = code; break;
-            case Id.Id6: key6Handler = code; break;
-            case Id.Id7: key7Handler = code; break;
-            case Id.Id8: key8Handler = code; break;
-            case Id.Id9: key9Handler = code; break;
-            case Id.Id10: key10Handler = code; break;
-            case Id.Id11: key11Handler = code; break;
-            case Id.Id12: key12Handler = code; break;
+            case TrackId.Id1: track1Handler = code; break;
+            case TrackId.Id2: track2Handler = code; break;
+            case TrackId.Id3: track3Handler = code; break;
+            case TrackId.Id4: track4Handler = code; break;
+            case TrackId.Id5: track5Handler = code; break;
+            case TrackId.Id6: track6Handler = code; break;
+            case TrackId.Id7: track7Handler = code; break;
+            case TrackId.Id8: track8Handler = code; break;
+            case TrackId.Id9: track9Handler = code; break;
+            case TrackId.Id10: track10Handler = code; break;
+            case TrackId.Id11: track11Handler = code; break;
+            case TrackId.Id12: track12Handler = code; break;
         }
     }
 
     //% color="#FF8800"
-    //% subcategory="Directe bediening"
-    //% block="when lower yellow key is pressed"
+    //% block="when lower yellow track is pressed"
     //% block.loc.nl="wanneer op de onderste gele knop gedrukt"
     export function onButtonDown(code: () => void): void {
         buttonDownHandler = code
     }
 
     //% color="#FF8800"
-    //% subcategory="Directe bediening"
-    //% block="when upper yellow key is pressed"
+    //% block="when upper yellow track is pressed"
     //% block.loc.nl="wanneer op de bovenste gele knop gedrukt"
     export function onButtonUp(code: () => void): void {
         buttonUpHandler = code
     }
 
-    //% block="together with the yellow upper button"
-    //% block.loc.nl="samen met de bovenste gele knop"
+    //% block="together with the upper button"
+    //% block.loc.nl="samen met de bovenste"
     export function isAltUp(): boolean {
         return ALTUP
     }
 
-    //% block="together with the yellow lower button"
-    //% block.loc.nl="samen met de onderste gele knop"
+    //% block="together with the lower button"
+    //% block.loc.nl="samen met de onderste knop"
     export function isAltDown(): boolean {
         return ALTDOWN
     }
 
-    //% block="the yellow upper button"
-    //% block.loc.nl="de bovenste gele knop"
+    //% block="the upper button"
+    //% block.loc.nl="de bovenste knop"
     export function buttonUp(): number {
         return BUTTONUP
     }
 
-    //% block="the yellow lower button"
-    //% block.loc.nl="de onderste gele knop"
+    //% block="the lower button"
+    //% block.loc.nl="de onderste knop"
     export function buttonDown(): number {
         return BUTTONDOWN
     }
 
-    //% subcategory="Directe bediening"
-    //% block="set uturn %id to state %state"
-    //% block.loc.nl="zet omkeren %id in stand %state"
-    export function idUturn(id: Id, state: State) {
-        let i = getId(id)
-        setUturn(elements[i].gate, elements[i].offset, elements[i].state)
+    //% block="set all tracks in opposite direction"
+    //% block.loc.nl="zet alle baanvakken in omgekeerde richting"
+    export function invertAllTracks() {
+        for (let i = 0; i < tracks.length; i++) {
+            if (tracks[i].type != SwitchType.SwitchLeft && tracks[i].type != SwitchType.SwitchRight) {
+                tracks[i].reverse = !tracks[i].reverse
+                setTrackColor(tracks[i])
+            }
+        }
     }
 
-    //% subcategory="Directe bediening"
-    //% block="set uncouple %id to state %state"
-    //% block.loc.nl="zet loskoppelen %id in stand %state"
-    export function idUncouple(id: Id, state: State) {
+    //% block="set track %id in opposite direction"
+    //% block.loc.nl="zet baanvak %id in omgekeerde richting"
+    export function invertTrack(id: TrackId) {
         let i = getId(id)
-        setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
+        if (tracks[i].type != SwitchType.SwitchLeft && tracks[i].type != SwitchType.SwitchRight) {
+            tracks[i].reverse = !tracks[i].reverse
+            setTrackColor(tracks[i])
+        }
     }
 
-    //% subcategory="Directe bediening"
-    //% block="set pause %id to state %state"
-    //% block.loc.nl="zet pauzeer %id in stand %state"
-    export function idWait(id: Id, state: State) {
+
+    //% block="set number %id to a next state"
+    //% block.loc.nl="zet nummer %id in een volgende stand"
+    //% id.min=1 id.max=12 id.defl=1
+    export function shiftState(id: number) {
         let i = getId(id)
-        setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+        if (tracks[i].type == SwitchType.SwitchLeft || tracks[i].type == SwitchType.SwitchRight) {
+            tracks[i].state = (tracks[i].state == SwitchState.Bent ? SwitchState.Straight : SwitchState.Bent)
+            setSwitchColor(tracks[i])
+        }
+        else {
+            let state = tracks[i].state + 1
+            switch (tracks[i].type) {
+                case TrackType.Speed:
+                    if (state > TrackState.Fast) state = TrackState.Slow;
+                    break;
+                case TrackType.Pause:
+                    if (state > TrackState.Long) state = TrackState.Short;
+                    break;
+                case TrackType.Uncouple:
+                    state = (state == TrackState.Uncouple ? TrackState.Inactive : TrackState.Uncouple)
+                    break;
+                case TrackType.Uturn:
+                    state = (state == TrackState.Uturn ? TrackState.Inactive : TrackState.Uturn)
+                    break;
+            }
+            tracks[i].state = state
+            setTrackColor(tracks[i])
+        }
     }
 
-    //% subcategory="Directe bediening"
-    //% block="set speed %id to state %state"
-    //% block.loc.nl="zet snelheid %id in stand %state"
-    export function idSpeed(id: Id, state: State) {
+    //% block="set track %id to state %state"
+    //% block.loc.nl="zet baanvak %id in stand %state"
+    export function setTrackState(id: TrackId, state: TrackState) {
         let i = getId(id)
-        setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
+        let type = trackType(state)
+        if (type != tracks[i].type) {
+            tracks[i].type = type
+            setPixelOffset(tracks[i].gate)
+            tracks[i].state = state
+        }
+        setTrackColor(tracks[i])
     }
 
-    //% subcategory="Directe bediening"
     //% block="set switch %id to state %state"
     //% block.loc.nl="zet wissel %id in stand %state"
-    export function idSwitch(id: Id, state: State) {
+    export function setSwitchState(id: TrackId, state: SwitchState) {
         let i = getId(id)
-        if (elements[i].type == Type.SwitchLeft)
-            setSwitchLeft(elements[i].gate, elements[i].offset, elements[i].state)
-        else
-            setSwitchRight(elements[i].gate, elements[i].offset, elements[i].state)
+        setSwitchColor(tracks[i])
     }
-
-    //% block="set %id to state %state"
-    //% block.loc.nl="zet %id in stand %state"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idState(id: number, state: State) {
-        let i = getId(id)
-        elements[i].state = state
-        switch (elements[i].type) {
-            case Type.Speed:
-                setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
-                break
-            case Type.Wait:
-                setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
-                break
-            case Type.SwitchLeft:
-                setSwitchLeft(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-            case Type.SwitchRight:
-                setSwitchRight(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-            case Type.Uncouple:
-                setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-            case Type.Uturn:
-                setUturn(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-        }
-    }
-
-    //% block="set %id to a next state"
-    //% block.loc.nl="zet %id in een volgende stand"
-    //% id.min=1 id.max=12 id.defl=1
-    export function idNextState(id: number) {
-        let i = getId(id)
-        elements[i].state = getNextState(elements[i].type, elements[i].state)
-        switch (elements[i].type) {
-            case Type.Speed:
-                setSpeed(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
-                break
-            case Type.Wait:
-                setWait(elements[i].gate, elements[i].offset, elements[i].state, elements[i].reverse)
-                break
-            case Type.SwitchLeft:
-                setSwitchLeft(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-            case Type.SwitchRight:
-                setSwitchRight(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-            case Type.Uncouple:
-                setUncouple(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-            case Type.Uturn:
-                setUturn(elements[i].gate, elements[i].offset, elements[i].state)
-                break
-        }
-    }
-
-    //% block="turn all codes in opposite direction"
-    //% block.loc.nl="draai alle codes in omgekeerde richting"
-    export function idInvertAll() {
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].reverse = !elements[i].reverse
-            idState(elements[i].id, elements[i].state)
-        }
-    }
-
-    //% block="turn %id in opposite direction"
-    //% block.loc.nl="draai %id in omgekeerde richting"
-    export function idInvert(id: Id) {
-        let i = getId(id)
-        elements[i].reverse = !elements[i].reverse
-        idState(id, elements[i].state)
-    }
-
-    //% block="connect %id as a %type to %gate %position"
-    //% block.loc.nl="verbind %id als %type met %gate %position"
+    //% subcategory="Bij opstarten"
+    //% block="connect %id as a %TrackType to %gate %position"
+    //% block.loc.nl="verbind %id als %TrackType met %gate %position"
     //% inlineInputMode=inline
-    export function idCreate(id: Id, type: Type, gate: Gate, position: Position) {
+    export function connectTrack(id: TrackId, type: TrackType, gate: Gate, position: Position) {
         let i = getId(id)
-        elements[i].gate = gate
-        elements[i].position = position
-        elements[i].type = type
+        tracks[i].gate = gate
+        tracks[i].position = position
+        tracks[i].type = type
+        tracks[i].reverse = false
         switch (type) {
-            case Type.Speed: elements[i].state = State.Normal; break;
-            case Type.Wait: elements[i].state = State.Short; break;
-            case Type.SwitchLeft: elements[i].state = State.Bent; break;
-            case Type.SwitchRight: elements[i].state = State.Bent; break;
-            case Type.Uncouple: elements[i].state = State.Active; break;
-            case Type.Uturn: elements[i].state = State.Active; break;
+            case TrackType.Speed: tracks[i].state = TrackState.SNormal; break;
+            case TrackType.Pause: tracks[i].state = TrackState.Short; break;
+            case TrackType.Uncouple: tracks[i].state = TrackState.Uncouple; break;
+            case TrackType.Uturn: tracks[i].state = TrackState.Uturn; break;
         }
-        setPixelOffset(elements[i].gate)
-        idState(id, elements[i].state)
+        setPixelOffset(tracks[i].gate)
+        setTrackColor(tracks[i])
+    }
+
+    //% subcategory="Bij opstarten"
+    //% block="connect %id as a %TrackType to %gate %position"
+    //% block.loc.nl="verbind %id als %TrackType met %gate %position"
+    //% inlineInputMode=inline
+    export function connectSwitch(id: TrackId, type: SwitchType, gate: Gate, position: Position) {
+        let i = getId(id)
+        tracks[i].gate = gate
+        tracks[i].position = position
+        tracks[i].type = type
+        tracks[i].reverse = false
+        switch (type) {
+            case SwitchType.SwitchLeft: tracks[i].state = SwitchState.Bent; break;
+            case SwitchType.SwitchRight: tracks[i].state = SwitchState.Bent; break;
+        }
+        setPixelOffset(tracks[i].gate)
+        setSwitchColor(tracks[i])
     }
 }
