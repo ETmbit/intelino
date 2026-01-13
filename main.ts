@@ -538,8 +538,8 @@ namespace Intelino {
     }
 
     //% color="#FF8800"
-    //% block="when receiving an update of %id"
-    //% block.loc.nl="bij een wijziging van %id"
+    //% block="when pressing number %id"
+    //% block.loc.nl="wanneer op nummer %id wordt gedrukt"
     export function onTrackId(id: TrackId, code: () => void): void {
         switch (id) {
             case TrackId.Id1: track1Handler = code; break;
@@ -739,8 +739,8 @@ namespace Intelino {
 
     //% color="#FF8800"
     //% subcategory="Met parameter"
-    //% block="when receiving update of"
-    //% block.loc.nl="bij een wijziging van"
+    //% block="when pressing number"
+    //% block.loc.nl="bij het indrukken van nummer"
     //% draggableParameters="id"
     export function onTrackPrm(code: (id: number) => void): void {
         trackHandler = code
